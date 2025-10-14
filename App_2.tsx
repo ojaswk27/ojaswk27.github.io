@@ -245,7 +245,7 @@ const AchievementsPage = () => (
 const SkillsPage = () => (
   <Section id="skills" title="Skills" fullHeight>
     <GlassCard className="p-8">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-8 text-center">
         {SKILLS.map((skill, index) => (
           <div key={index} className="flex flex-col items-center gap-2">
             <div className="text-4xl">{skill.icon}</div>

@@ -207,9 +207,9 @@ export const EXPERIENCE: Experience[] = [
 
 export const ACHIEVEMENTS: Achievement[] = [
   {
-    title: "1st Place Winner",
-    event: "State University Annual Hackathon 2023",
-    date: "April 2023",
+    title: "3rd Place IAM3D",
+    event: "ASME India IAM3D challenge",
+    date: "April 2025",
   },
   {
     title: "ACM-ICPC Regional Finalist",
@@ -218,8 +218,8 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
   {
     title: "Dean's List for Academic Excellence",
-    event: "State University",
-    date: "2021-2023",
+    event: "Shiv Nadar Institute of Eminence",
+    date: "Summer 2024",
   },
   {
     title: "Top Submission in Math Modeling Contest",
@@ -233,8 +233,71 @@ export const SKILLS: Skill[] = [
   { name: "JavaScript / TS", icon: <JavaScriptIcon /> },
   { name: "React", icon: <ReactIcon /> },
   { name: "Node.js", icon: <NodeJsIcon /> },
-  { name: "C++", icon: <CppIcon /> },
+  { name: "C/C++", icon: <CppIcon /> },
   { name: "SQL", icon: <SQLIcon /> },
-  { name: "Git", icon: <GitIcon /> },
   { name: "Docker", icon: <DockerIcon /> },
+  {
+    name: "CAD",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="text-orange-400"
+      >
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <path d="M7 7h10v10H7z" />
+        <path d="M7 7l10 10" />
+      </svg>
+    ),
+  },
+  {
+    name: "FEM",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="text-orange-400"
+      >
+        <polygon points="12,2 22,8 17,22 7,22 2,8" />
+        <line x1="12" y1="2" x2="12" y2="22" />
+        <line x1="2" y1="8" x2="22" y2="8" />
+        <line x1="7" y1="22" x2="17" y2="22" />
+      </svg>
+    ),
+  },
+  {
+    name: "CFD",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="text-orange-400"
+      >
+        <path d="M3 12c2-4 8-4 10 0s8 4 8 0" />
+        <path d="M3 16c2-4 8-4 10 0s8 4 8 0" />
+        <path d="M3 8c2-4 8-4 10 0s8 4 8 0" />
+      </svg>
+    ),
+  },
 ];

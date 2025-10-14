@@ -245,7 +245,7 @@ const AchievementsPage = () => (
 const SkillsPage = () => (
   <Section id="skills" title="Skills" fullHeight>
     <GlassCard className="p-8">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-8 text-center">
         {SKILLS.map((skill, index) => (
           <div key={index} className="flex flex-col items-center gap-2">
             <div className="text-4xl">{skill.icon}</div>
@@ -302,7 +302,7 @@ const Footer = () => (
   <footer className="text-center py-8 px-4">
     <div className="flex justify-center gap-6 mb-4">
       <a
-        href="https://github.com/placeholder"
+        href="https://github.com/ojaswk27"
         target="_blank"
         rel="noopener noreferrer"
         className="text-gray-400 hover:text-orange-400 transition-colors"
@@ -310,7 +310,7 @@ const Footer = () => (
         <GitHubIcon />
       </a>
       <a
-        href="https://linkedin.com/placeholder"
+        href="https://www.linkedin.com/in/ojasw-kant-169aa032a"
         target="_blank"
         rel="noopener noreferrer"
         className="text-gray-400 hover:text-orange-400 transition-colors"
@@ -318,7 +318,7 @@ const Footer = () => (
         <LinkedInIcon />
       </a>
       <a
-        href="mailto:placeholder@example.com"
+        href="mailto:ojaswkant@gmail.com"
         className="text-gray-400 hover:text-orange-400 transition-colors"
       >
         <MailIcon />

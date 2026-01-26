@@ -7,31 +7,83 @@ import { PROJECTS, EXPERIENCE, ACHIEVEMENTS, SKILLS } from "./constants";
 const GlassCard: React.FC<{
   children: React.ReactNode;
   className?: string;
-}> = ({ children, className = "" }) => (
-  <div
-    className={`bg-gray-800/30 backdrop-blur-lg border border-gray-700/50 rounded-2xl shadow-lg transition-all duration-300 hover:border-orange-400/60 hover:bg-gray-800/50 ${className}`}
-  >
-    {children}
-  </div>
-);
+}> = ({ children, className = "" }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [cardRef, setCardRef] = useState<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!cardRef) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(cardRef); // Stop observing once visible
+        }
+      },
+      { threshold: 0.1, rootMargin: '50px' }
+    );
+
+    observer.observe(cardRef);
+    return () => observer.disconnect();
+  }, [cardRef]);
+
+  return (
+    <div
+      ref={setCardRef}
+      className={`bg-gray-800/30 backdrop-blur-lg border border-gray-700/50 rounded-2xl shadow-lg transition-all duration-200 hover:border-orange-400/60 hover:bg-gray-800/50 hover:shadow-xl hover:shadow-orange-500/10 hover:scale-[1.02] ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+};
 
 const Section: React.FC<{
   children: React.ReactNode;
   id: string;
   title: string;
   fullHeight?: boolean;
-}> = ({ children, id, title, fullHeight = false }) => (
-  <section
-    id={id}
-    className={`py-16 sm:py-24 px-4 md:px-8 max-w-5xl mx-auto ${fullHeight ? "min-h-screen flex flex-col justify-center" : ""}`}
-  >
-    <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12 text-gray-100 relative">
-      <span className="relative z-10">{title}</span>
-      <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-1 bg-orange-500 rounded-full"></span>
-    </h2>
-    {children}
-  </section>
-);
+}> = ({ children, id, title, fullHeight = false }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [sectionRef, setSectionRef] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!sectionRef) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(sectionRef); // Stop observing once visible
+        }
+      },
+      { threshold: 0.05, rootMargin: '100px' }
+    );
+
+    observer.observe(sectionRef);
+    return () => observer.disconnect();
+  }, [sectionRef]);
+
+  return (
+    <section
+      ref={setSectionRef}
+      id={id}
+      className={`py-16 sm:py-24 px-4 md:px-8 max-w-5xl mx-auto ${fullHeight ? "min-h-screen flex flex-col justify-center" : ""}`}
+    >
+      <h2 className={`text-3xl sm:text-4xl font-bold text-center mb-12 text-gray-100 relative transition-all duration-500 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'
+      }`}>
+        <span className="relative z-10">{title}</span>
+        <span className={`absolute -bottom-2 left-1/2 -translate-x-1/2 h-1 bg-orange-500 rounded-full transition-all duration-700 ${
+          isVisible ? 'w-24' : 'w-0'
+        }`}></span>
+      </h2>
+      {children}
+    </section>
+  );
+};
 
 // --- ICON COMPONENTS ---
 
@@ -103,65 +155,92 @@ const ExternalLinkIcon = () => (
 
 // --- PAGE COMPONENTS ---
 
-const HomePage = () => (
-  <section
-    id="home"
-    className="min-h-screen flex flex-col items-center justify-center text-center px-4"
-  >
-    <div className="max-w-3xl">
-      <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-gray-100 to-gray-400 pb-2">
-        Ojasw Kant
-      </h1>
-      <p className="text-xl md:text-2xl text-orange-400 mt-2 mb-6">
-        Student in Computer Science & Mathematics
-      </p>
-      <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-        Passionate about crafting pratical solutions to complex real-world
-        problems, from developing intelligent systems to exploring the beauty of
-        math applications.
-      </p>
-      <div className="flex justify-center gap-6 mt-8">
-        <a
-          href="https://github.com/placeholder"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-300 hover:text-orange-400 transition-colors"
-        >
-          <GitHubIcon />
-        </a>
-        <a
-          href="https://linkedin.com/placeholder"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-300 hover:text-orange-400 transition-colors"
-        >
-          <LinkedInIcon />
-        </a>
-        <a
-          href="mailto:placeholder@example.com"
-          className="text-gray-300 hover:text-orange-400 transition-colors"
-        >
-          <MailIcon />
-        </a>
+const HomePage = () => {
+  const [displayText, setDisplayText] = useState("");
+  const fullText = "Computer Science & Engineering Student";
+  const autocompleteAt = 15; // After typing "Computer Science", autocomplete the rest
+  
+  useEffect(() => {
+    let index = 0;
+    const timer = setInterval(() => {
+      if (index < autocompleteAt) {
+        // Type normally for the first part
+        setDisplayText(fullText.slice(0, index));
+        index++;
+      } else if (index === autocompleteAt) {
+        // Autocomplete the rest (like pressing Tab)
+        setDisplayText(fullText);
+        clearInterval(timer);
+      }
+    }, 30); // Faster typing speed (was 50ms)
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <section
+      id="home"
+      className="min-h-screen flex flex-col items-center justify-center text-center px-4"
+    >
+      <div className="max-w-3xl">
+        <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-gray-100 to-gray-400 pb-2 animate-fade-in">
+          Ojasw Kant
+        </h1>
+        <p className="text-xl md:text-2xl text-orange-400 mt-2 mb-6 h-8">
+          {displayText}<span className="animate-pulse">|</span>
+        </p>
+        <p className="text-lg text-gray-300 max-w-2xl mx-auto animate-fade-in-delay">
+          Focused on backend/software + ML systems for autonomous applications. Building data/ML pipelines and autonomous systems. Currently pursuing B.Tech in CSE with a Mathematics minor at Shiv Nadar Institute of Eminence (GPA: 8.73).
+        </p>
+        <div className="flex justify-center gap-6 mt-8 animate-fade-in-delay-2">
+          <a
+            href="https://github.com/ojaswk27"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-300 hover:text-orange-400 transition-all duration-150 hover:scale-110"
+          >
+            <GitHubIcon />
+          </a>
+          <a
+            href="https://www.linkedin.com/in/ojasw-kant-169aa032a"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-300 hover:text-orange-400 transition-all duration-150 hover:scale-110"
+          >
+            <LinkedInIcon />
+          </a>
+          <a
+            href="mailto:ojaswkant@gmail.com"
+            className="text-gray-300 hover:text-orange-400 transition-all duration-150 hover:scale-110"
+          >
+            <MailIcon />
+          </a>
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const AboutPage = () => (
   <Section id="about" title="About Me" fullHeight>
     <GlassCard className="p-8">
-      <p className="text-gray-300 leading-relaxed text-center md:text-left">
-        As a dedicated Computer Science major aiming for a minor in Mathematics
-        at Shiv Nadar University, I am driven by the intersection of logic,
-        creativity, and technology. My coursework in advanced algorithms,
-        machine learning, and discrete mathematics has provided me with a strong
-        theoretical foundation, which I love to apply to practical, real-world
-        projects. Whether it's building a performant application or an
-        autonomous system, I am often seen seeking new challenges that push the
-        boundaries of my knowledge. I thrive in collaborative environments and
-        am eager to contribute my skills to a forward-thinking team.
+      <p className="text-gray-300 leading-relaxed text-center md:text-left mb-8">
+        Computer Science & Engineering undergraduate at Shiv Nadar Institute of Eminence (2024-28) with an 8.73 GPA, pursuing a mathematics minor focused on ML courses. Passionate about building practical solutions for autonomous applications and data/ML pipelines.
       </p>
+      <div className="grid md:grid-cols-2 gap-6 mt-6">
+        <div className="bg-gray-800/50 p-4 rounded-lg">
+          <h3 className="text-orange-400 font-bold mb-2">Education</h3>
+          <p className="text-gray-200 font-semibold">B.Tech in Computer Science & Engineering</p>
+          <p className="text-gray-300 text-sm">Shiv Nadar Institute of Eminence</p>
+          <p className="text-gray-400 text-sm">2024-2028 | GPA: 8.73</p>
+          <p className="text-gray-300 text-sm mt-2">Minor in Mathematics</p>
+        </div>
+        <div className="bg-gray-800/50 p-4 rounded-lg">
+          <h3 className="text-orange-400 font-bold mb-2">Contact</h3>
+          <p className="text-gray-300 text-sm">📧 ojaswkant@gmail.com</p>
+          <p className="text-gray-300 text-sm mt-1">📱 +91 8826474924</p>
+          <p className="text-gray-300 text-sm mt-1">📍 Delhi, India</p>
+        </div>
+      </div>
     </GlassCard>
   </Section>
 );
@@ -195,9 +274,12 @@ const ProjectsPage = () => (
   <Section id="projects" title="Projects">
     <div className="grid md:grid-cols-2 gap-8">
       {PROJECTS.map((project: Project, index: number) => (
-        <GlassCard key={index} className="p-6 flex flex-col">
+        <GlassCard 
+          key={index} 
+          className="p-6 flex flex-col"
+        >
           <div className="flex justify-between items-start mb-4">
-            <h3 className="text-xl font-bold text-orange-400">
+            <h3 className="text-xl font-bold text-orange-400 transition-all duration-300 group-hover:text-orange-300">
               {project.title}
             </h3>
             {project.link && (
@@ -205,7 +287,7 @@ const ProjectsPage = () => (
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-orange-400 transition-colors"
+                className="text-gray-400 hover:text-orange-400 transition-all duration-150 hover:scale-110"
               >
                 <ExternalLinkIcon />
               </a>
@@ -216,7 +298,7 @@ const ProjectsPage = () => (
             {project.tags.map((tag) => (
               <span
                 key={tag}
-                className="bg-orange-900/50 text-orange-300 text-xs font-semibold px-2.5 py-1 rounded-full"
+                className="bg-orange-900/50 text-orange-300 text-xs font-semibold px-2.5 py-1 rounded-full transition-all duration-150 hover:bg-orange-800/70 hover:scale-105"
               >
                 {tag}
               </span>
@@ -245,11 +327,18 @@ const AchievementsPage = () => (
 const SkillsPage = () => (
   <Section id="skills" title="Skills" fullHeight>
     <GlassCard className="p-8">
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-8 text-center">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
         {SKILLS.map((skill, index) => (
-          <div key={index} className="flex flex-col items-center gap-2">
-            <div className="text-4xl">{skill.icon}</div>
-            <p className="font-semibold text-gray-200">{skill.name}</p>
+          <div 
+            key={index} 
+            className="flex flex-col items-center gap-2 group cursor-pointer"
+          >
+            <div className="text-4xl transition-all duration-150 group-hover:scale-125">
+              {skill.icon}
+            </div>
+            <p className="font-semibold text-gray-200 transition-all duration-150 group-hover:text-orange-400 group-hover:scale-105">
+              {skill.name}
+            </p>
           </div>
         ))}
       </div>
@@ -268,35 +357,53 @@ const NAV_LINKS = [
   "Skills",
 ];
 
-const Header = ({ activeSection }: { activeSection: string }) => (
-  <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-4xl">
-    <GlassCard className="p-2">
-      <nav className="flex items-center justify-center sm:justify-between">
-        <a
-          href="#home"
-          className="hidden sm:block text-lg font-bold ml-4 hover:text-orange-400 transition-colors"
-        >
-          OJ
-        </a>
-        <ul className="flex items-center gap-1 sm:gap-2">
-          {NAV_LINKS.map((link) => {
-            const linkLower = link.toLowerCase();
-            return (
-              <li key={link}>
-                <a
-                  href={`#${linkLower}`}
-                  className={`text-sm sm:text-base px-3 py-2 rounded-lg transition-all duration-300 ${activeSection === linkLower ? "bg-gray-700 text-orange-400" : "hover:bg-gray-700/50"}`}
-                >
-                  {link}
-                </a>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-    </GlassCard>
-  </header>
-);
+const Header = ({ activeSection }: { activeSection: string }) => {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <header className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-4xl transition-transform duration-150 ${
+      scrolled ? 'scale-95' : 'scale-100'
+    }`}>
+      <GlassCard className="p-2">
+        <nav className="flex items-center justify-center sm:justify-between">
+          <a
+            href="#home"
+            className="hidden sm:block text-lg font-bold ml-4 hover:text-orange-400 transition-all duration-150 hover:scale-105"
+          >
+            OJ
+          </a>
+          <ul className="flex items-center gap-1 sm:gap-2">
+            {NAV_LINKS.map((link) => {
+              const linkLower = link.toLowerCase();
+              return (
+                <li key={link}>
+                  <a
+                    href={`#${linkLower}`}
+                    className={`text-sm sm:text-base px-3 py-2 rounded-lg transition-all duration-150 ${
+                      activeSection === linkLower 
+                        ? "bg-gray-700 text-orange-400 scale-105" 
+                        : "hover:bg-gray-700/50 hover:scale-105"
+                    }`}
+                  >
+                    {link}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </GlassCard>
+    </header>
+  );
+};
 
 const Footer = () => (
   <footer className="text-center py-8 px-4">
@@ -542,8 +649,15 @@ function App() {
           66% { transform: translate(-30px, 40px) scale(0.95); }
           100% { transform: translate(0px, 0px) scale(1); }
         }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
         .animate-blob { animation: blob 7s infinite; }
         .animate-blob-slow { animation: blob-slow 12s infinite; }
+        .animate-fade-in { animation: fadeIn 1s ease-out; }
+        .animate-fade-in-delay { animation: fadeIn 1s ease-out 0.3s backwards; }
+        .animate-fade-in-delay-2 { animation: fadeIn 1s ease-out 0.6s backwards; }
         .animation-delay-1000 { animation-delay: 1s; }
         .animation-delay-1500 { animation-delay: 1.5s; }
         .animation-delay-2000 { animation-delay: 2s; }

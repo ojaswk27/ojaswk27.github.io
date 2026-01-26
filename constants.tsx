@@ -152,90 +152,100 @@ const DockerIcon = () => (
 
 export const PROJECTS: Project[] = [
   {
-    title: "Project Alpha: AI Chess Engine",
+    title: "AI-Powered Aerospace Design Assistant",
     description:
-      "A sophisticated chess engine using alpha-beta pruning and a neural network for board evaluation. Developed a custom GUI to visualize the AI's decision-making process.",
-    tags: ["Python", "PyTorch", "Minimax", "GUI"],
-    link: "https://github.com/placeholder",
+      "Built an AI assistant that turns text requirements into preliminary aircraft/rocket/satellite designs with computed specs + citations. Uses RAG over 30+ arXiv/NASA papers with embeddings and vehicle-type vector index. Includes LLM-based auto-fill and validation checks to prevent unrealistic sizing.",
+    tags: ["Python", "RAG", "LLM", "Aerospace", "ML"],
+    link: "https://github.com/ojaswk27",
   },
   {
-    title: "Project Beta: Financial Data Visualization",
+    title: "NIDAR 2025 - Autonomous Multi-Drone SAR System",
     description:
-      "A web-based dashboard for visualizing real-time stock market data. Integrated with multiple financial APIs and used D3.js for complex, interactive charts.",
-    tags: ["React", "TypeScript", "D3.js", "Node.js", "API"],
-    link: "https://github.com/placeholder",
+      "Developed a fully autonomous multi-drone Search And Rescue system for disaster management. Handled computer vision model training, post-processing and optimization for deployment. Implemented autonomy architecture and performed CAD analysis, fabrication and assembly.",
+    tags: ["Computer Vision", "Autonomous Systems", "Python", "CAD", "Drones"],
   },
   {
-    title: "Project Gamma: Distributed Systems Simulator",
+    title: "Smart S.N.U. Hackathon - CV Trash Detection",
     description:
-      "A simulator for visualizing and testing consensus algorithms like Paxos and Raft. This project was key to my understanding of distributed computing principles.",
-    tags: ["Go", "Distributed Systems", "Algorithms"],
+      "Built a computer vision based trash detection system that routes nearby garbage trucks to locations based on trash volume and current truck location. Implemented semantic segmentation with custom method to approximate trash volume. Qualified for SIH (Smart India Hackathon).",
+    tags: ["Computer Vision", "Semantic Segmentation", "Python", "ML"],
   },
   {
-    title: "Project Delta: Mathematical Modeling of Fluid Dynamics",
+    title: "Hackdata 2026 - Multimodal Video RAG",
     description:
-      "An academic project exploring numerical methods to solve Navier-Stokes equations for specific scenarios, combining my passion for CS and applied mathematics.",
-    tags: ["MATLAB", "Numerical Analysis", "Physics"],
-    link: "https://github.com/placeholder",
+      "Using Qwen3-VL for video-grounded VLM reasoning with time-chunked clips/frames in a multimodal RAG search system. Built a media pipeline that chunks content (30-60s), generates multimodal embeddings, indexes in Chroma/Qdrant. Achieves 60-120 fps processing, 10-100x faster than manual review.",
+    tags: ["VLM", "RAG", "Video Processing", "Python", "Qwen3"],
   },
 ];
 
 export const EXPERIENCE: Experience[] = [
   {
-    role: "A. Secretary at Aeronautics and Aerospace Society",
-    company: "Shiv Nadar Institute of Eminence",
-    duration: "Summer 2025 - Now",
+    role: "Assistant Secretary",
+    company: "Aeronautics and Aerospace Society, SNIoE",
+    duration: "Summer 2025 - Present",
     descriptionPoints: [
-      "Placeholder",
-      "Placeholder",
-      "Placeholder",
-      "Placeholder",
+      "Leading aerospace-focused projects and initiatives within the society",
+      "Organizing technical workshops and seminars on aerospace engineering",
+      "Coordinating with faculty and industry professionals for student guidance",
+      "Managing team operations and event planning for aerospace competitions",
     ],
   },
   {
-    role: "Member of American Society of Mechanical Engineers",
-    company: "ASME Student Chapter SNIoE",
-    duration: "Fall 2024 - Now",
+    role: "Active Member",
+    company: "American Society of Mechanical Engineers (ASME), SNIoE",
+    duration: "Fall 2024 - Present",
     descriptionPoints: [
-      "Participated and placed 3rd in ASME India IAM3D challenge.",
-      "Used innovative mechanical solutions and applied knowledge of additive manufacturing",
-      "Placeholder",
-      "Placeholder",
+      "Secured 3rd place in ASME India IAM3D challenge among national competitors",
+      "Applied innovative mechanical solutions and additive manufacturing knowledge",
+      "Collaborated on design optimization using FEM and CAD tools",
+      "Participated in technical discussions on advanced manufacturing techniques",
+    ],
+  },
+  {
+    role: "Member",
+    company: "Atal Tinkering Lab, Birla Vidya Niketan",
+    duration: "2023",
+    descriptionPoints: [
+      "Engaged in hands-on prototyping and robotics projects",
+      "Worked on electronics assembly and embedded systems",
+      "Developed problem-solving skills through innovation challenges",
+      "Built foundation in hardware-software integration",
     ],
   },
 ];
 
 export const ACHIEVEMENTS: Achievement[] = [
   {
-    title: "3rd Place IAM3D",
-    event: "ASME India IAM3D challenge",
+    title: "3rd Place - IAM3D Challenge",
+    event: "ASME India National Competition",
     date: "April 2025",
   },
   {
-    title: "ACM-ICPC Regional Finalist",
-    event: "North America Programming Contest",
-    date: "November 2022",
-  },
-  {
-    title: "Dean's List for Academic Excellence",
-    event: "Shiv Nadar Institute of Eminence",
+    title: "Dean's List - Academic Excellence",
+    event: "Shiv Nadar Institute of Eminence (8.73 GPA)",
     date: "Summer 2024",
   },
   {
-    title: "Top Submission in Math Modeling Contest",
-    event: "COMAP MCM/ICM",
-    date: "February 2022",
+    title: "SIH Qualifier",
+    event: "Smart India Hackathon - Smart S.N.U. Hackathon",
+    date: "2025",
+  },
+  {
+    title: "NIDAR 2025 Participant",
+    event: "Autonomous Drone Competition",
+    date: "2025",
   },
 ];
 
 export const SKILLS: Skill[] = [
   { name: "Python", icon: <PythonIcon /> },
+  { name: "C/C++", icon: <CppIcon /> },
+  { name: "Java", icon: <JavaScriptIcon /> },
   { name: "JavaScript / TS", icon: <JavaScriptIcon /> },
   { name: "React", icon: <ReactIcon /> },
-  { name: "Node.js", icon: <NodeJsIcon /> },
-  { name: "C/C++", icon: <CppIcon /> },
-  { name: "SQL", icon: <SQLIcon /> },
-  { name: "Docker", icon: <DockerIcon /> },
+  { name: "Machine Learning", icon: <NodeJsIcon /> },
+  { name: "Computer Vision", icon: <DockerIcon /> },
+  { name: "DSA", icon: <GitIcon /> },
   {
     name: "CAD",
     icon: (
@@ -297,6 +307,26 @@ export const SKILLS: Skill[] = [
         <path d="M3 12c2-4 8-4 10 0s8 4 8 0" />
         <path d="M3 16c2-4 8-4 10 0s8 4 8 0" />
         <path d="M3 8c2-4 8-4 10 0s8 4 8 0" />
+      </svg>
+    ),
+  },
+  {
+    name: "3D Printing",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="text-orange-400"
+      >
+        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+        <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
       </svg>
     ),
   },

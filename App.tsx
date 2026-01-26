@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import type { Project, Experience, Achievement, Skill } from "./types";
 import { PROJECTS, EXPERIENCE, ACHIEVEMENTS, SKILLS } from "./constants";
 
@@ -31,7 +31,7 @@ const GlassCard: React.FC<{
   return (
     <div
       ref={setCardRef}
-      className={`bg-gray-800/30 backdrop-blur-lg border border-gray-700/50 rounded-2xl shadow-lg transition-all duration-200 hover:border-orange-400/60 hover:bg-gray-800/50 hover:shadow-xl hover:shadow-orange-500/10 hover:scale-[1.02] ${
+      className={`bg-gray-800/30 backdrop-blur-lg border border-gray-700/50 rounded-2xl shadow-lg transition-all duration-200 hover:border-gray-100/60 hover:bg-gray-800/50 hover:shadow-xl hover:shadow-white/10 hover:scale-[1.02] ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
       } ${className}`}
     >
@@ -76,7 +76,7 @@ const Section: React.FC<{
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'
       }`}>
         <span className="relative z-10">{title}</span>
-        <span className={`absolute -bottom-2 left-1/2 -translate-x-1/2 h-1 bg-orange-500 rounded-full transition-all duration-700 ${
+        <span className={`absolute -bottom-2 left-1/2 -translate-x-1/2 h-1 bg-white rounded-full transition-all duration-700 ${
           isVisible ? 'w-24' : 'w-0'
         }`}></span>
       </h2>
@@ -158,22 +158,54 @@ const ExternalLinkIcon = () => (
 const HomePage = () => {
   const [displayText, setDisplayText] = useState("");
   const fullText = "Computer Science & Engineering Student";
-  const autocompleteAt = 15; // After typing "Computer Science", autocomplete the rest
+  const words = fullText.split(' ');
   
   useEffect(() => {
-    let index = 0;
-    const timer = setInterval(() => {
-      if (index < autocompleteAt) {
-        // Type normally for the first part
-        setDisplayText(fullText.slice(0, index));
-        index++;
-      } else if (index === autocompleteAt) {
-        // Autocomplete the rest (like pressing Tab)
-        setDisplayText(fullText);
-        clearInterval(timer);
+    // 80 WPM = 80 words per minute = 80/60 = 1.33 words per second
+    // Average word is 5 characters, so 5 * 1.33 = 6.67 chars/sec
+    // 1000ms / 6.67 = ~150ms per character
+    const charDelay = 150;
+    const autocompleteDelay = 100; // Delay before autocompleting word
+    
+    let currentWordIndex = 0;
+    let currentCharIndex = 0;
+    let currentDisplay = "";
+    
+    const typeNextChar = () => {
+      if (currentWordIndex >= words.length) return;
+      
+      const currentWord = words[currentWordIndex];
+      const charsToType = Math.min(3, currentWord.length); // Type first 3 chars of each word
+      
+      if (currentCharIndex < charsToType) {
+        // Type character by character
+        currentDisplay += currentWord[currentCharIndex];
+        setDisplayText(currentDisplay);
+        currentCharIndex++;
+        setTimeout(typeNextChar, charDelay);
+      } else if (currentCharIndex < currentWord.length) {
+        // Autocomplete rest of word
+        currentDisplay += currentWord.slice(currentCharIndex);
+        if (currentWordIndex < words.length - 1) {
+          currentDisplay += " "; // Add space between words
+        }
+        setDisplayText(currentDisplay);
+        
+        // Move to next word
+        currentWordIndex++;
+        currentCharIndex = 0;
+        setTimeout(typeNextChar, autocompleteDelay);
+      } else {
+        // Word is complete, move to next word
+        currentDisplay += " ";
+        setDisplayText(currentDisplay);
+        currentWordIndex++;
+        currentCharIndex = 0;
+        setTimeout(typeNextChar, autocompleteDelay);
       }
-    }, 30); // Faster typing speed (was 50ms)
-    return () => clearInterval(timer);
+    };
+    
+    typeNextChar();
   }, []);
 
   return (
@@ -185,18 +217,18 @@ const HomePage = () => {
         <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-gray-100 to-gray-400 pb-2 animate-fade-in">
           Ojasw Kant
         </h1>
-        <p className="text-xl md:text-2xl text-orange-400 mt-2 mb-6 h-8">
+        <p className="text-xl md:text-2xl text-gray-100 mt-2 mb-6 h-8 font-share-tech">
           {displayText}<span className="animate-pulse">|</span>
         </p>
         <p className="text-lg text-gray-300 max-w-2xl mx-auto animate-fade-in-delay">
-          Focused on backend/software + ML systems for autonomous applications. Building data/ML pipelines and autonomous systems. Currently pursuing B.Tech in CSE with a Mathematics minor at Shiv Nadar Institute of Eminence (GPA: 8.73).
+          Focused on backend/software + ML systems for autonomous applications. Building data/ML pipelines and autonomous systems. Currently pursuing B.Tech in CSE with a Mathematics minor at Shiv Nadar Institute of Eminence.
         </p>
         <div className="flex justify-center gap-6 mt-8 animate-fade-in-delay-2">
           <a
             href="https://github.com/ojaswk27"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-300 hover:text-orange-400 transition-all duration-150 hover:scale-110"
+            className="text-gray-300 hover:text-white transition-all duration-150 hover:scale-110"
           >
             <GitHubIcon />
           </a>
@@ -204,13 +236,13 @@ const HomePage = () => {
             href="https://www.linkedin.com/in/ojasw-kant-169aa032a"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-300 hover:text-orange-400 transition-all duration-150 hover:scale-110"
+            className="text-gray-300 hover:text-white transition-all duration-150 hover:scale-110"
           >
             <LinkedInIcon />
           </a>
           <a
             href="mailto:ojaswkant@gmail.com"
-            className="text-gray-300 hover:text-orange-400 transition-all duration-150 hover:scale-110"
+            className="text-gray-300 hover:text-white transition-all duration-150 hover:scale-110"
           >
             <MailIcon />
           </a>
@@ -224,18 +256,18 @@ const AboutPage = () => (
   <Section id="about" title="About Me" fullHeight>
     <GlassCard className="p-8">
       <p className="text-gray-300 leading-relaxed text-center md:text-left mb-8">
-        Computer Science & Engineering undergraduate at Shiv Nadar Institute of Eminence (2024-28) with an 8.73 GPA, pursuing a mathematics minor focused on ML courses. Passionate about building practical solutions for autonomous applications and data/ML pipelines.
+        Computer Science & Engineering undergraduate at Shiv Nadar Institute of Eminence (2024-28), pursuing a mathematics minor focused on ML courses. Passionate about building practical solutions for autonomous applications and data/ML pipelines.
       </p>
       <div className="grid md:grid-cols-2 gap-6 mt-6">
         <div className="bg-gray-800/50 p-4 rounded-lg">
-          <h3 className="text-orange-400 font-bold mb-2">Education</h3>
+          <h3 className="text-white font-bold mb-2">Education</h3>
           <p className="text-gray-200 font-semibold">B.Tech in Computer Science & Engineering</p>
           <p className="text-gray-300 text-sm">Shiv Nadar Institute of Eminence</p>
-          <p className="text-gray-400 text-sm">2024-2028 | GPA: 8.73</p>
+          <p className="text-gray-400 text-sm">2024-2028</p>
           <p className="text-gray-300 text-sm mt-2">Minor in Mathematics</p>
         </div>
         <div className="bg-gray-800/50 p-4 rounded-lg">
-          <h3 className="text-orange-400 font-bold mb-2">Contact</h3>
+          <h3 className="text-white font-bold mb-2">Contact</h3>
           <p className="text-gray-300 text-sm">📧 ojaswkant@gmail.com</p>
           <p className="text-gray-300 text-sm mt-1">📱 +91 8826474924</p>
           <p className="text-gray-300 text-sm mt-1">📍 Delhi, India</p>
@@ -252,7 +284,7 @@ const ExperiencePage = () => (
         <GlassCard key={index} className="p-6">
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="text-xl font-bold text-orange-400">{exp.role}</h3>
+              <h3 className="text-xl font-bold text-white">{exp.role}</h3>
               <p className="font-semibold text-gray-200">{exp.company}</p>
             </div>
             <p className="text-sm text-gray-400 flex-shrink-0 ml-4">
@@ -279,7 +311,7 @@ const ProjectsPage = () => (
           className="p-6 flex flex-col"
         >
           <div className="flex justify-between items-start mb-4">
-            <h3 className="text-xl font-bold text-orange-400 transition-all duration-300 group-hover:text-orange-300">
+            <h3 className="text-xl font-bold text-white transition-all duration-300">
               {project.title}
             </h3>
             {project.link && (
@@ -287,7 +319,7 @@ const ProjectsPage = () => (
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-orange-400 transition-all duration-150 hover:scale-110"
+                className="text-gray-400 hover:text-white transition-all duration-150 hover:scale-110"
               >
                 <ExternalLinkIcon />
               </a>
@@ -298,7 +330,7 @@ const ProjectsPage = () => (
             {project.tags.map((tag) => (
               <span
                 key={tag}
-                className="bg-orange-900/50 text-orange-300 text-xs font-semibold px-2.5 py-1 rounded-full transition-all duration-150 hover:bg-orange-800/70 hover:scale-105"
+                className="bg-gray-700/50 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded-full transition-all duration-150 hover:bg-gray-600/70 hover:scale-105"
               >
                 {tag}
               </span>
@@ -315,7 +347,7 @@ const AchievementsPage = () => (
     <div className="grid sm:grid-cols-2 gap-6">
       {ACHIEVEMENTS.map((ach, index) => (
         <GlassCard key={index} className="p-6">
-          <h3 className="text-lg font-bold text-orange-400">{ach.title}</h3>
+          <h3 className="text-lg font-bold text-white">{ach.title}</h3>
           <p className="text-gray-300">{ach.event}</p>
           <p className="text-sm text-gray-400 mt-1">{ach.date}</p>
         </GlassCard>
@@ -336,7 +368,7 @@ const SkillsPage = () => (
             <div className="text-4xl transition-all duration-150 group-hover:scale-125">
               {skill.icon}
             </div>
-            <p className="font-semibold text-gray-200 transition-all duration-150 group-hover:text-orange-400 group-hover:scale-105">
+            <p className="font-semibold text-gray-200 transition-all duration-150 group-hover:text-white group-hover:scale-105">
               {skill.name}
             </p>
           </div>
@@ -376,7 +408,7 @@ const Header = ({ activeSection }: { activeSection: string }) => {
         <nav className="flex items-center justify-center sm:justify-between">
           <a
             href="#home"
-            className="hidden sm:block text-lg font-bold ml-4 hover:text-orange-400 transition-all duration-150 hover:scale-105"
+            className="hidden sm:block text-lg font-bold ml-4 hover:text-white transition-all duration-150 hover:scale-105"
           >
             OJ
           </a>
@@ -389,7 +421,7 @@ const Header = ({ activeSection }: { activeSection: string }) => {
                     href={`#${linkLower}`}
                     className={`text-sm sm:text-base px-3 py-2 rounded-lg transition-all duration-150 ${
                       activeSection === linkLower 
-                        ? "bg-gray-700 text-orange-400 scale-105" 
+                        ? "bg-gray-700 text-white scale-105" 
                         : "hover:bg-gray-700/50 hover:scale-105"
                     }`}
                   >
@@ -412,7 +444,7 @@ const Footer = () => (
         href="https://github.com/ojaswk27"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-gray-400 hover:text-orange-400 transition-colors"
+        className="text-gray-400 hover:text-white transition-colors"
       >
         <GitHubIcon />
       </a>
@@ -420,13 +452,13 @@ const Footer = () => (
         href="https://www.linkedin.com/in/ojasw-kant-169aa032a"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-gray-400 hover:text-orange-400 transition-colors"
+        className="text-gray-400 hover:text-white transition-colors"
       >
         <LinkedInIcon />
       </a>
       <a
         href="mailto:ojaswkant@gmail.com"
-        className="text-gray-400 hover:text-orange-400 transition-colors"
+        className="text-gray-400 hover:text-white transition-colors"
       >
         <MailIcon />
       </a>
@@ -435,61 +467,201 @@ const Footer = () => (
   </footer>
 );
 
-// --- BLOB COMPONENT WITH MOUSE REPULSION ---
+// --- ANIMATED WAVE BACKGROUND ---
 
-const MagneticBlob: React.FC<{
-  className: string;
-  style?: React.CSSProperties;
-  mouseX: number;
-  mouseY: number;
-  position: { top?: string; bottom?: string; left?: string; right?: string };
-  size: number;
-}> = ({ className, style, mouseX, mouseY, position, size }) => {
-  const [blobRef, setBlobRef] = useState<HTMLDivElement | null>(null);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    if (!blobRef) return;
-
-    const rect = blobRef.getBoundingClientRect();
-    const blobCenterX = rect.left + rect.width / 2;
-    const blobCenterY = rect.top + rect.height / 2 + window.scrollY; // Account for scroll
-
-    const distanceX = mouseX - blobCenterX;
-    const distanceY = mouseY - blobCenterY;
-    const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-
-    // Repulsion effect - stronger when mouse is closer
-    const maxDistance = 300; // Maximum distance for effect
-    const strength = 50; // Maximum repulsion strength in pixels
-
-    if (distance < maxDistance) {
-      const force = (1 - distance / maxDistance) * strength;
-      const angle = Math.atan2(distanceY, distanceX);
-
-      // Apply repulsion in opposite direction
-      const newX = -Math.cos(angle) * force;
-      const newY = -Math.sin(angle) * force;
-
-      setOffset({ x: newX, y: newY });
-    } else {
-      setOffset({ x: 0, y: 0 });
-    }
-  }, [mouseX, mouseY, blobRef]);
-
-  return (
-    <div
-      ref={setBlobRef}
-      className={className}
-      style={{
-        ...style,
-        ...position,
-        transform: `translate(${offset.x}px, ${offset.y}px)`,
-        transition: "transform 0.5s ease-out",
+const WaveBackground = () => (
+  <div className="pointer-events-none" style={{ position: 'absolute', top: 0, left: 0, width: '100vw', height: '100vh', overflow: 'hidden' }}>
+    <svg 
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 1920 1080"
+      preserveAspectRatio="xMidYMid slice"
+      style={{ 
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        minWidth: '100vw'
       }}
-    />
-  );
-};
+    >
+      <defs>
+        {/* Slate & Steel Monochrome Gradients */}
+        <linearGradient id="wave-gradient-1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style={{ stopColor: '#64748b', stopOpacity: 0.15 }} />
+          <stop offset="100%" style={{ stopColor: '#475569', stopOpacity: 0.08 }} />
+        </linearGradient>
+        <linearGradient id="wave-gradient-2" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style={{ stopColor: '#475569', stopOpacity: 0.12 }} />
+          <stop offset="100%" style={{ stopColor: '#334155', stopOpacity: 0.06 }} />
+        </linearGradient>
+        <linearGradient id="wave-gradient-3" x1="50%" y1="0%" x2="50%" y2="100%">
+          <stop offset="0%" style={{ stopColor: '#94a3b8', stopOpacity: 0.1 }} />
+          <stop offset="100%" style={{ stopColor: '#64748b', stopOpacity: 0.05 }} />
+        </linearGradient>
+        <linearGradient id="wave-gradient-4" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" style={{ stopColor: '#cbd5e1', stopOpacity: 0.08 }} />
+          <stop offset="100%" style={{ stopColor: '#94a3b8', stopOpacity: 0.04 }} />
+        </linearGradient>
+        <linearGradient id="wave-gradient-5" x1="100%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" style={{ stopColor: '#475569', stopOpacity: 0.1 }} />
+          <stop offset="100%" style={{ stopColor: '#64748b', stopOpacity: 0.04 }} />
+        </linearGradient>
+        <linearGradient id="wave-gradient-6" x1="25%" y1="0%" x2="75%" y2="100%">
+          <stop offset="0%" style={{ stopColor: '#1e293b', stopOpacity: 0.12 }} />
+          <stop offset="100%" style={{ stopColor: '#334155', stopOpacity: 0.05 }} />
+        </linearGradient>
+        <linearGradient id="wave-gradient-7" x1="75%" y1="0%" x2="25%" y2="100%">
+          <stop offset="0%" style={{ stopColor: '#64748b', stopOpacity: 0.09 }} />
+          <stop offset="100%" style={{ stopColor: '#475569', stopOpacity: 0.04 }} />
+        </linearGradient>
+        <linearGradient id="wave-gradient-8" x1="0%" y1="50%" x2="100%" y2="50%">
+          <stop offset="0%" style={{ stopColor: '#94a3b8', stopOpacity: 0.07 }} />
+          <stop offset="100%" style={{ stopColor: '#cbd5e1', stopOpacity: 0.03 }} />
+        </linearGradient>
+        <linearGradient id="wave-gradient-9" x1="100%" y1="50%" x2="0%" y2="50%">
+          <stop offset="0%" style={{ stopColor: '#334155', stopOpacity: 0.1 }} />
+          <stop offset="100%" style={{ stopColor: '#475569', stopOpacity: 0.04 }} />
+        </linearGradient>
+        <linearGradient id="wave-gradient-10" x1="50%" y1="100%" x2="50%" y2="0%">
+          <stop offset="0%" style={{ stopColor: '#64748b', stopOpacity: 0.08 }} />
+          <stop offset="100%" style={{ stopColor: '#94a3b8', stopOpacity: 0.03 }} />
+        </linearGradient>
+      </defs>
+      
+      {/* Wave 1 - Top layer */}
+      <path fill="url(#wave-gradient-1)" d="M0,100 Q480,0 960,100 T1920,100 V0 H0 Z">
+        <animate 
+          attributeName="d" 
+          dur="16s" 
+          repeatCount="indefinite"
+          values="
+            M0,100 Q480,0 960,100 T1920,100 V0 H0 Z;
+            M0,100 Q480,200 960,100 T1920,100 V0 H0 Z;
+            M0,100 Q480,0 960,100 T1920,100 V0 H0 Z"
+        />
+      </path>
+      
+      {/* Wave 2 */}
+      <path fill="url(#wave-gradient-2)" d="M0,150 Q640,40 1280,150 T2560,150 V0 H0 Z">
+        <animate 
+          attributeName="d" 
+          dur="20s" 
+          repeatCount="indefinite"
+          values="
+            M0,150 Q640,40 1280,150 T2560,150 V0 H0 Z;
+            M0,150 Q640,260 1280,150 T2560,150 V0 H0 Z;
+            M0,150 Q640,40 1280,150 T2560,150 V0 H0 Z"
+        />
+      </path>
+
+      {/* Wave 3 */}
+      <path fill="url(#wave-gradient-3)" d="M0,210 Q800,80 1600,210 T3200,210 V0 H0 Z">
+        <animate 
+          attributeName="d" 
+          dur="24s" 
+          repeatCount="indefinite"
+          values="
+            M0,210 Q800,80 1600,210 T3200,210 V0 H0 Z;
+            M0,210 Q800,340 1600,210 T3200,210 V0 H0 Z;
+            M0,210 Q800,80 1600,210 T3200,210 V0 H0 Z"
+        />
+      </path>
+
+      {/* Wave 4 */}
+      <path fill="url(#wave-gradient-4)" d="M0,280 Q960,130 1920,280 T3840,280 V0 H0 Z">
+        <animate 
+          attributeName="d" 
+          dur="28s" 
+          repeatCount="indefinite"
+          values="
+            M0,280 Q960,130 1920,280 T3840,280 V0 H0 Z;
+            M0,280 Q960,430 1920,280 T3840,280 V0 H0 Z;
+            M0,280 Q960,130 1920,280 T3840,280 V0 H0 Z"
+        />
+      </path>
+
+      {/* Wave 5 */}
+      <path fill="url(#wave-gradient-5)" d="M0,360 Q1120,200 2240,360 T4480,360 V0 H0 Z">
+        <animate 
+          attributeName="d" 
+          dur="32s" 
+          repeatCount="indefinite"
+          values="
+            M0,360 Q1120,200 2240,360 T4480,360 V0 H0 Z;
+            M0,360 Q1120,520 2240,360 T4480,360 V0 H0 Z;
+            M0,360 Q1120,200 2240,360 T4480,360 V0 H0 Z"
+        />
+      </path>
+
+      {/* Wave 6 - Bottom waves start */}
+      <path fill="url(#wave-gradient-6)" d="M0,720 Q1120,560 2240,720 T4480,720 V1080 H0 Z">
+        <animate 
+          attributeName="d" 
+          dur="30s" 
+          repeatCount="indefinite"
+          values="
+            M0,720 Q1120,560 2240,720 T4480,720 V1080 H0 Z;
+            M0,720 Q1120,880 2240,720 T4480,720 V1080 H0 Z;
+            M0,720 Q1120,560 2240,720 T4480,720 V1080 H0 Z"
+        />
+      </path>
+
+      {/* Wave 7 */}
+      <path fill="url(#wave-gradient-7)" d="M0,800 Q960,650 1920,800 T3840,800 V1080 H0 Z">
+        <animate 
+          attributeName="d" 
+          dur="26s" 
+          repeatCount="indefinite"
+          values="
+            M0,800 Q960,650 1920,800 T3840,800 V1080 H0 Z;
+            M0,800 Q960,950 1920,800 T3840,800 V1080 H0 Z;
+            M0,800 Q960,650 1920,800 T3840,800 V1080 H0 Z"
+        />
+      </path>
+
+      {/* Wave 8 */}
+      <path fill="url(#wave-gradient-8)" d="M0,870 Q800,720 1600,870 T3200,870 V1080 H0 Z">
+        <animate 
+          attributeName="d" 
+          dur="22s" 
+          repeatCount="indefinite"
+          values="
+            M0,870 Q800,720 1600,870 T3200,870 V1080 H0 Z;
+            M0,870 Q800,1020 1600,870 T3200,870 V1080 H0 Z;
+            M0,870 Q800,720 1600,870 T3200,870 V1080 H0 Z"
+        />
+      </path>
+
+      {/* Wave 9 */}
+      <path fill="url(#wave-gradient-9)" d="M0,930 Q640,800 1280,930 T2560,930 V1080 H0 Z">
+        <animate 
+          attributeName="d" 
+          dur="19s" 
+          repeatCount="indefinite"
+          values="
+            M0,930 Q640,800 1280,930 T2560,930 V1080 H0 Z;
+            M0,930 Q640,1060 1280,930 T2560,930 V1080 H0 Z;
+            M0,930 Q640,800 1280,930 T2560,930 V1080 H0 Z"
+        />
+      </path>
+
+      {/* Wave 10 - Bottom layer */}
+      <path fill="url(#wave-gradient-10)" d="M0,980 Q480,850 960,980 T1920,980 V1080 H0 Z">
+        <animate 
+          attributeName="d" 
+          dur="17s" 
+          repeatCount="indefinite"
+          values="
+            M0,980 Q480,850 960,980 T1920,980 V1080 H0 Z;
+            M0,980 Q480,1080 960,980 T1920,980 V1080 H0 Z;
+            M0,980 Q480,850 960,980 T1920,980 V1080 H0 Z"
+        />
+      </path>
+    </svg>
+  </div>
+);
+
+
 
 // --- MAIN APP COMPONENT ---
 
@@ -531,144 +703,58 @@ function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Mouse tracking for magnetic repulsion
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      // Account for scroll position since blobs are now absolute positioned
-      setMousePosition({
-        x: e.clientX,
-        y: e.clientY + window.scrollY,
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
-  // Blob configurations - spread evenly across the page height
-  const blobs = [
-    {
-      position: { top: "5%", left: "10%" },
-      size: 288,
-      className:
-        "w-72 h-72 bg-orange-700 rounded-full mix-blend-screen filter blur-xl opacity-20 animate-blob",
-    },
-    {
-      position: { top: "15%", right: "15%" },
-      size: 288,
-      className:
-        "w-72 h-72 bg-gray-700 rounded-full mix-blend-screen filter blur-xl opacity-20 animate-blob animation-delay-2000",
-    },
-    {
-      position: { top: "25%", left: "60%" },
-      size: 384,
-      className:
-        "w-96 h-96 bg-orange-600 rounded-full mix-blend-screen filter blur-2xl opacity-10 animate-blob-slow animation-delay-1000",
-    },
-    {
-      position: { top: "35%", left: "20%" },
-      size: 256,
-      className:
-        "w-64 h-64 bg-gray-600 rounded-full mix-blend-screen filter blur-xl opacity-15 animate-blob animation-delay-3000",
-    },
-    {
-      position: { top: "45%", right: "25%" },
-      size: 320,
-      className:
-        "w-80 h-80 bg-orange-800 rounded-full mix-blend-screen filter blur-2xl opacity-10 animate-blob-slow animation-delay-5000",
-    },
-    {
-      position: { top: "55%", left: "40%" },
-      size: 640,
-      className:
-        "w-[40rem] h-[40rem] bg-orange-700 rounded-full mix-blend-screen filter blur-3xl opacity-5 animate-blob-slow -translate-x-1/2 -translate-y-1/2",
-    },
-    {
-      position: { top: "65%", right: "10%" },
-      size: 288,
-      className:
-        "w-72 h-72 bg-gray-800 rounded-full mix-blend-screen filter blur-xl opacity-15 animate-blob animation-delay-2500",
-    },
-    {
-      position: { top: "75%", left: "30%" },
-      size: 224,
-      className:
-        "w-56 h-56 bg-orange-400 rounded-full mix-blend-screen filter blur-lg opacity-15 animate-blob animation-delay-3500",
-    },
-    {
-      position: { top: "85%", right: "40%" },
-      size: 288,
-      className:
-        "w-72 h-72 bg-orange-500 rounded-full mix-blend-screen filter blur-xl opacity-20 animate-blob animation-delay-4000",
-    },
-    {
-      position: { top: "95%", left: "50%" },
-      size: 320,
-      className:
-        "w-80 h-80 bg-gray-700 rounded-full mix-blend-screen filter blur-2xl opacity-10 animate-blob-slow animation-delay-1500",
-    },
-  ];
+  // Removed mouse tracking and blob generation - now handled by CursorTrail component
 
   return (
     <div className="relative min-h-screen w-full bg-gray-900 text-gray-200 font-sans">
-      {/* Background Blobs Container - Spans full document height */}
-      <div
-        className="absolute top-0 left-0 right-0 w-full overflow-hidden pointer-events-none"
-        style={{
-          bottom: 0,
-          height: "auto",
-          minHeight: "100%",
-          zIndex: 0,
-        }}
-      >
-        {blobs.map((blob, index) => (
-          <MagneticBlob
-            key={index}
-            className={`absolute ${blob.className}`}
-            position={blob.position}
-            size={blob.size}
-            mouseX={mousePosition.x}
-            mouseY={mousePosition.y}
-          />
-        ))}
+      {/* Animated Wave Background */}
+      <div className="fixed top-0 left-0 w-screen h-screen z-0" style={{ width: '100vw', height: '100vh' }}>
+        <WaveBackground />
       </div>
 
       <style>{`
         html, body {
           overflow-x: hidden;
+          scrollbar-gutter: stable;
         }
-        @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-          100% { transform: translate(0px, 0px) scale(1); }
+        
+        /* Overlay scrollbar that doesn't take up space */
+        ::-webkit-scrollbar {
+          width: 12px;
         }
-        @keyframes blob-slow {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(50px, -30px) scale(1.15); }
-          66% { transform: translate(-30px, 40px) scale(0.95); }
-          100% { transform: translate(0px, 0px) scale(1); }
+        
+        ::-webkit-scrollbar-track {
+          background: transparent;
         }
+        
+        ::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 6px;
+          border: 2px solid transparent;
+          background-clip: padding-box;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.4);
+          background-clip: padding-box;
+        }
+        
+        /* Firefox scrollbar */
+        * {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+        
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        .animate-blob { animation: blob 7s infinite; }
-        .animate-blob-slow { animation: blob-slow 12s infinite; }
         .animate-fade-in { animation: fadeIn 1s ease-out; }
         .animate-fade-in-delay { animation: fadeIn 1s ease-out 0.3s backwards; }
         .animate-fade-in-delay-2 { animation: fadeIn 1s ease-out 0.6s backwards; }
-        .animation-delay-1000 { animation-delay: 1s; }
-        .animation-delay-1500 { animation-delay: 1.5s; }
-        .animation-delay-2000 { animation-delay: 2s; }
-        .animation-delay-2500 { animation-delay: 2.5s; }
-        .animation-delay-3000 { animation-delay: 3s; }
-        .animation-delay-3500 { animation-delay: 3.5s; }
-        .animation-delay-4000 { animation-delay: 4s; }
-        .animation-delay-5000 { animation-delay: 5s; }
       `}</style>
 
-      <div className="relative z-10">
+      <div className="relative" style={{ zIndex: 10 }}>
         <Header activeSection={activeSection} />
         <main>
           <HomePage />

@@ -222,7 +222,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
   {
     title: "Dean's List - Academic Excellence",
-    event: "Shiv Nadar Institute of Eminence (8.73 GPA)",
+    event: "Shiv Nadar Institute of Eminence",
     date: "Summer 2024",
   },
   {

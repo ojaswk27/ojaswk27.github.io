@@ -332,3 +332,16 @@ export const SKILLS: Skill[] = [
     ),
   },
 ];
+
+export const INTERESTS = [
+  "Autonomous Systems",
+  "Aerospace Engineering",
+  "Computer Vision",
+  "Hardware-Software Integration",
+  "Robotics",
+  "Machine Learning",
+  "Embedded Systems",
+  "3D Printing & Fabrication",
+  "Drone Technology",
+  "Real-time Systems"
+];

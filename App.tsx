@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { Project, Experience, Achievement, Skill } from "./types";
-import { PROJECTS, EXPERIENCE, ACHIEVEMENTS, SKILLS } from "./constants";
+import { PROJECTS, EXPERIENCE, ACHIEVEMENTS, SKILLS, INTERESTS } from "./constants";
 
 // --- HELPER & UI COMPONENTS ---
 
@@ -9,7 +9,20 @@ const GlassCard: React.FC<{
   className?: string;
 }> = ({ children, className = "" }) => (
   <div
-    className={`bg-gray-800/30 backdrop-blur-lg border border-gray-700/50 rounded-lg shadow-lg shadow-white/5 ${className}`}
+    className={`backdrop-blur-lg border rounded-lg shadow-lg transition-all duration-200 ${className}`}
+    style={{
+      backgroundColor: 'rgba(20, 20, 20, 0.3)',
+      borderColor: 'rgba(80, 80, 80, 0.3)',
+      boxShadow: '0 8px 32px rgba(255, 255, 255, 0.02)',
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.borderColor = 'rgba(160, 160, 160, 0.5)';
+      e.currentTarget.style.boxShadow = '0 8px 32px rgba(180, 180, 180, 0.1)';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.borderColor = 'rgba(80, 80, 80, 0.3)';
+      e.currentTarget.style.boxShadow = '0 8px 32px rgba(255, 255, 255, 0.02)';
+    }}
   >
     {children}
   </div>
@@ -104,46 +117,46 @@ const WaveBackground = () => (
       }}
     >
       <defs>
-        {/* Slate & Steel Monochrome Gradients */}
+        {/* Pure Monochrome Black/White/Gray Gradients - No Color */}
         <linearGradient id="wave-gradient-1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#64748b', stopOpacity: 0.15 }} />
-          <stop offset="100%" style={{ stopColor: '#475569', stopOpacity: 0.08 }} />
+          <stop offset="0%" style={{ stopColor: '#505050', stopOpacity: 0.12 }} />
+          <stop offset="100%" style={{ stopColor: '#303030', stopOpacity: 0.06 }} />
         </linearGradient>
         <linearGradient id="wave-gradient-2" x1="100%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#475569', stopOpacity: 0.12 }} />
-          <stop offset="100%" style={{ stopColor: '#334155', stopOpacity: 0.06 }} />
+          <stop offset="0%" style={{ stopColor: '#404040', stopOpacity: 0.1 }} />
+          <stop offset="100%" style={{ stopColor: '#202020', stopOpacity: 0.05 }} />
         </linearGradient>
         <linearGradient id="wave-gradient-3" x1="50%" y1="0%" x2="50%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#94a3b8', stopOpacity: 0.1 }} />
-          <stop offset="100%" style={{ stopColor: '#64748b', stopOpacity: 0.05 }} />
+          <stop offset="0%" style={{ stopColor: '#808080', stopOpacity: 0.08 }} />
+          <stop offset="100%" style={{ stopColor: '#606060', stopOpacity: 0.04 }} />
         </linearGradient>
         <linearGradient id="wave-gradient-4" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" style={{ stopColor: '#cbd5e1', stopOpacity: 0.08 }} />
-          <stop offset="100%" style={{ stopColor: '#94a3b8', stopOpacity: 0.04 }} />
+          <stop offset="0%" style={{ stopColor: '#a0a0a0', stopOpacity: 0.06 }} />
+          <stop offset="100%" style={{ stopColor: '#707070', stopOpacity: 0.03 }} />
         </linearGradient>
         <linearGradient id="wave-gradient-5" x1="100%" y1="100%" x2="0%" y2="0%">
-          <stop offset="0%" style={{ stopColor: '#475569', stopOpacity: 0.1 }} />
-          <stop offset="100%" style={{ stopColor: '#64748b', stopOpacity: 0.04 }} />
+          <stop offset="0%" style={{ stopColor: '#404040', stopOpacity: 0.08 }} />
+          <stop offset="100%" style={{ stopColor: '#505050', stopOpacity: 0.03 }} />
         </linearGradient>
         <linearGradient id="wave-gradient-6" x1="25%" y1="0%" x2="75%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#1e293b', stopOpacity: 0.12 }} />
-          <stop offset="100%" style={{ stopColor: '#334155', stopOpacity: 0.05 }} />
+          <stop offset="0%" style={{ stopColor: '#1a1a1a', stopOpacity: 0.1 }} />
+          <stop offset="100%" style={{ stopColor: '#2a2a2a', stopOpacity: 0.04 }} />
         </linearGradient>
         <linearGradient id="wave-gradient-7" x1="75%" y1="0%" x2="25%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#64748b', stopOpacity: 0.09 }} />
-          <stop offset="100%" style={{ stopColor: '#475569', stopOpacity: 0.04 }} />
+          <stop offset="0%" style={{ stopColor: '#606060', stopOpacity: 0.07 }} />
+          <stop offset="100%" style={{ stopColor: '#404040', stopOpacity: 0.03 }} />
         </linearGradient>
         <linearGradient id="wave-gradient-8" x1="0%" y1="50%" x2="100%" y2="50%">
-          <stop offset="0%" style={{ stopColor: '#94a3b8', stopOpacity: 0.07 }} />
-          <stop offset="100%" style={{ stopColor: '#cbd5e1', stopOpacity: 0.03 }} />
+          <stop offset="0%" style={{ stopColor: '#909090', stopOpacity: 0.05 }} />
+          <stop offset="100%" style={{ stopColor: '#b0b0b0', stopOpacity: 0.02 }} />
         </linearGradient>
         <linearGradient id="wave-gradient-9" x1="100%" y1="50%" x2="0%" y2="50%">
-          <stop offset="0%" style={{ stopColor: '#334155', stopOpacity: 0.1 }} />
-          <stop offset="100%" style={{ stopColor: '#475569', stopOpacity: 0.04 }} />
+          <stop offset="0%" style={{ stopColor: '#2a2a2a', stopOpacity: 0.08 }} />
+          <stop offset="100%" style={{ stopColor: '#404040', stopOpacity: 0.03 }} />
         </linearGradient>
         <linearGradient id="wave-gradient-10" x1="50%" y1="100%" x2="50%" y2="0%">
-          <stop offset="0%" style={{ stopColor: '#64748b', stopOpacity: 0.08 }} />
-          <stop offset="100%" style={{ stopColor: '#94a3b8', stopOpacity: 0.03 }} />
+          <stop offset="0%" style={{ stopColor: '#505050', stopOpacity: 0.06 }} />
+          <stop offset="100%" style={{ stopColor: '#808080', stopOpacity: 0.02 }} />
         </linearGradient>
       </defs>
       
@@ -151,7 +164,7 @@ const WaveBackground = () => (
       <path fill="url(#wave-gradient-1)" d="M0,100 Q480,0 960,100 T1920,100 V0 H0 Z">
         <animate 
           attributeName="d" 
-          dur="16s" 
+          dur="80s" 
           repeatCount="indefinite"
           values="
             M0,100 Q480,0 960,100 T1920,100 V0 H0 Z;
@@ -164,7 +177,7 @@ const WaveBackground = () => (
       <path fill="url(#wave-gradient-2)" d="M0,150 Q640,40 1280,150 T2560,150 V0 H0 Z">
         <animate 
           attributeName="d" 
-          dur="20s" 
+          dur="100s" 
           repeatCount="indefinite"
           values="
             M0,150 Q640,40 1280,150 T2560,150 V0 H0 Z;
@@ -177,7 +190,7 @@ const WaveBackground = () => (
       <path fill="url(#wave-gradient-3)" d="M0,210 Q800,80 1600,210 T3200,210 V0 H0 Z">
         <animate 
           attributeName="d" 
-          dur="24s" 
+          dur="120s" 
           repeatCount="indefinite"
           values="
             M0,210 Q800,80 1600,210 T3200,210 V0 H0 Z;
@@ -190,7 +203,7 @@ const WaveBackground = () => (
       <path fill="url(#wave-gradient-4)" d="M0,280 Q960,130 1920,280 T3840,280 V0 H0 Z">
         <animate 
           attributeName="d" 
-          dur="28s" 
+          dur="140s" 
           repeatCount="indefinite"
           values="
             M0,280 Q960,130 1920,280 T3840,280 V0 H0 Z;
@@ -203,7 +216,7 @@ const WaveBackground = () => (
       <path fill="url(#wave-gradient-5)" d="M0,360 Q1120,200 2240,360 T4480,360 V0 H0 Z">
         <animate 
           attributeName="d" 
-          dur="32s" 
+          dur="160s" 
           repeatCount="indefinite"
           values="
             M0,360 Q1120,200 2240,360 T4480,360 V0 H0 Z;
@@ -216,7 +229,7 @@ const WaveBackground = () => (
       <path fill="url(#wave-gradient-6)" d="M0,720 Q1120,560 2240,720 T4480,720 V1080 H0 Z">
         <animate 
           attributeName="d" 
-          dur="30s" 
+          dur="150s" 
           repeatCount="indefinite"
           values="
             M0,720 Q1120,560 2240,720 T4480,720 V1080 H0 Z;
@@ -229,7 +242,7 @@ const WaveBackground = () => (
       <path fill="url(#wave-gradient-7)" d="M0,800 Q960,650 1920,800 T3840,800 V1080 H0 Z">
         <animate 
           attributeName="d" 
-          dur="26s" 
+          dur="130s" 
           repeatCount="indefinite"
           values="
             M0,800 Q960,650 1920,800 T3840,800 V1080 H0 Z;
@@ -242,7 +255,7 @@ const WaveBackground = () => (
       <path fill="url(#wave-gradient-8)" d="M0,870 Q800,720 1600,870 T3200,870 V1080 H0 Z">
         <animate 
           attributeName="d" 
-          dur="22s" 
+          dur="110s" 
           repeatCount="indefinite"
           values="
             M0,870 Q800,720 1600,870 T3200,870 V1080 H0 Z;
@@ -255,7 +268,7 @@ const WaveBackground = () => (
       <path fill="url(#wave-gradient-9)" d="M0,930 Q640,800 1280,930 T2560,930 V1080 H0 Z">
         <animate 
           attributeName="d" 
-          dur="19s" 
+          dur="95s" 
           repeatCount="indefinite"
           values="
             M0,930 Q640,800 1280,930 T2560,930 V1080 H0 Z;
@@ -268,7 +281,7 @@ const WaveBackground = () => (
       <path fill="url(#wave-gradient-10)" d="M0,980 Q480,850 960,980 T1920,980 V1080 H0 Z">
         <animate 
           attributeName="d" 
-          dur="17s" 
+          dur="85s" 
           repeatCount="indefinite"
           values="
             M0,980 Q480,850 960,980 T1920,980 V1080 H0 Z;
@@ -329,7 +342,7 @@ function App() {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full bg-gray-900 text-gray-200 font-sans">
+    <div className="relative min-h-screen w-full text-gray-200 font-sans" style={{ backgroundColor: '#050301' }}>
       {/* Animated Wave Background */}
       <div className="fixed top-0 left-0 w-screen h-screen z-0" style={{ width: '100vw', height: '100vh' }}>
         <WaveBackground />
@@ -376,7 +389,7 @@ function App() {
             <h1 className="text-4xl md:text-5xl font-bold text-gray-100 mb-2">
               Ojasw Kant
             </h1>
-            <p className="text-lg md:text-xl text-gray-100 font-share-tech mb-4">
+            <p className="text-lg md:text-xl font-share-tech mb-4" style={{ color: '#f97316' }}>
               {displayText}<span className="animate-pulse">|</span>
             </p>
             <div className="flex justify-center gap-4 mb-4">
@@ -491,6 +504,23 @@ function App() {
                 </div>
               </GlassCard>
             </div>
+          </div>
+
+          {/* Interests Section */}
+          <div className="mt-4">
+            <GlassCard className="p-4">
+              <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">Interests</h3>
+              <p className="text-xs text-gray-300 mb-3 italic">
+                Very interested in the junction of software and hardware applications, it is really cool to me.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {INTERESTS.map((interest, index) => (
+                  <span key={index} className="bg-gray-700/30 text-gray-300 text-xs px-2 py-1 rounded">
+                    {interest}
+                  </span>
+                ))}
+              </div>
+            </GlassCard>
           </div>
 
           {/* Footer */}

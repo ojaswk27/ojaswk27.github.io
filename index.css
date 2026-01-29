@@ -19,6 +19,7 @@ body {
 /* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 10px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -32,4 +33,14 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #6b7280;
+}
+
+/* Hide scrollbar for header navigation on mobile but keep functionality */
+nav::-webkit-scrollbar {
+    height: 0px;
+}
+
+nav {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }

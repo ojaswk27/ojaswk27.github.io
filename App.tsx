@@ -405,21 +405,21 @@ const Header = ({ activeSection }: { activeSection: string }) => {
       scrolled ? 'scale-95' : 'scale-100'
     }`}>
       <GlassCard className="p-2">
-        <nav className="flex items-center justify-center sm:justify-between">
+        <nav className="flex items-center justify-center sm:justify-between overflow-x-auto">
           <a
             href="#home"
-            className="hidden sm:block text-lg font-bold ml-4 hover:text-white transition-all duration-150 hover:scale-105"
+            className="hidden sm:block text-lg font-bold ml-4 hover:text-white transition-all duration-150 hover:scale-105 flex-shrink-0"
           >
             OJ
           </a>
-          <ul className="flex items-center gap-1 sm:gap-2">
+          <ul className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
             {NAV_LINKS.map((link) => {
               const linkLower = link.toLowerCase();
               return (
                 <li key={link}>
                   <a
                     href={`#${linkLower}`}
-                    className={`text-sm sm:text-base px-3 py-2 rounded-lg transition-all duration-150 ${
+                    className={`text-sm sm:text-base px-3 py-2 rounded-lg transition-all duration-150 whitespace-nowrap ${
                       activeSection === linkLower 
                         ? "bg-gray-700 text-white scale-105" 
                         : "hover:bg-gray-700/50 hover:scale-105"

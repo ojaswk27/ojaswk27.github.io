@@ -169,6 +169,7 @@ export const PROJECTS: Project[] = [
     description:
       "Built a computer vision based trash detection system that routes nearby garbage trucks to locations based on trash volume and current truck location. Implemented semantic segmentation with custom method to approximate trash volume. Qualified for SIH (Smart India Hackathon).",
     tags: ["Computer Vision", "Semantic Segmentation", "Python", "ML"],
+    link: "https://github.com/rohitjg13/MORNIS",
   },
   {
     title: "Hackdata 2026 - Multimodal Video RAG",

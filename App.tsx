@@ -342,7 +342,7 @@ function App() {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full text-gray-200 font-sans" style={{ backgroundColor: '#050301' }}>
+    <div className="relative min-h-screen w-full text-gray-200 font-sans" style={{ backgroundColor: '#000000' }}>
       {/* Animated Wave Background */}
       <div className="fixed top-0 left-0 w-screen h-screen z-0" style={{ width: '100vw', height: '100vh' }}>
         <WaveBackground />

@@ -51,6 +51,28 @@
 }
 </script>
 <link rel="stylesheet" href="/index.css">
+  <script>
+    // Receive redirect from 404.html and restore the original URL path
+    (function() {
+      var search = window.location.search;
+      if (search.charAt(1) === 'p') {
+        var decoded = search.slice(1).split('&').reduce(function(memo, item) {
+          var parts = item.split('=');
+          memo[parts[0]] = parts.slice(1).join('=').replace(/~and~/g, '&');
+          return memo;
+        }, {});
+        if (decoded.p !== undefined) {
+          window.history.replaceState(
+            null, null,
+            window.location.pathname.slice(0, -1) +
+            (decoded.p ? '/' + decoded.p : '') +
+            (decoded.q ? '?' + decoded.q : '') +
+            window.location.hash
+          );
+        }
+      }
+    })();
+  </script>
 </head>
   <body class="bg-black">
     <div id="root"></div>

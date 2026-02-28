@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import type { Project, Experience, Achievement, Skill } from "./types";
 import { PROJECTS, EXPERIENCE, ACHIEVEMENTS, SKILLS, INTERESTS } from "./constants";
+import ProjectPage from "./ProjectPage";
+
+function toSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
 
 // --- HELPER & UI COMPONENTS ---
 
@@ -482,13 +491,20 @@ function App() {
                 <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">Projects</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {PROJECTS.map((project: Project, index: number) => (
-                    <div key={index} className="border border-gray-700/50 rounded p-3">
+                    <Link
+                      key={index}
+                      to={`/${project.slug ?? toSlug(project.title)}`}
+                      className="block border border-gray-700/50 rounded p-3 hover:border-gray-500/70 transition-colors"
+                    >
                       <div className="flex justify-between items-start mb-2">
                         <h4 className="text-sm font-bold text-white">{project.title}</h4>
                         {project.link && (
-                          <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">
+                          <span
+                            onClick={(e) => { e.preventDefault(); window.open(project.link, "_blank", "noopener,noreferrer"); }}
+                            className="text-gray-400 hover:text-white cursor-pointer"
+                          >
                             <ExternalLinkIcon />
-                          </a>
+                          </span>
                         )}
                       </div>
                       <p className="text-xs text-gray-400 mb-2 line-clamp-2">{project.description}</p>
@@ -499,7 +515,7 @@ function App() {
                           </span>
                         ))}
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </GlassCard>
@@ -533,4 +549,13 @@ function App() {
   );
 }
 
-export default App;
+export default function Root() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/:slug" element={<ProjectPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}

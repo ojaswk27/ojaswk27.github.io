@@ -5,6 +5,10 @@ export interface Project {
   description: string;
   tags: string[];
   link?: string;
+  slug?: string;
+  fullDescription?: string;
+  techDetails?: string[];
+  images?: string[];
 }
 
 export interface Experience {

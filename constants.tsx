@@ -157,12 +157,26 @@ export const PROJECTS: Project[] = [
       "Built an AI assistant that turns text requirements into preliminary aircraft/rocket/satellite designs with computed specs + citations. Uses RAG over 30+ arXiv/NASA papers with embeddings and vehicle-type vector index. Includes LLM-based auto-fill and validation checks to prevent unrealistic sizing.",
     tags: ["Python", "RAG", "LLM", "Aerospace", "ML"],
     link: "https://github.com/ojaswk27",
+    slug: "ai-aerospace-design-assistant",
+    fullDescription: `Add your full project description here. Describe the motivation, approach, results, and what you learned.`,
+    techDetails: [
+      "Add a tech detail here",
+      "Add another tech detail here",
+    ],
+    images: [],
   },
   {
     title: "NIDAR 2025 - Autonomous Multi-Drone SAR System",
     description:
       "Developed a fully autonomous multi-drone Search And Rescue system for disaster management. Handled computer vision model training, post-processing and optimization for deployment. Implemented autonomy architecture and performed CAD analysis, fabrication and assembly.",
     tags: ["Computer Vision", "Autonomous Systems", "Python", "CAD", "Drones"],
+    slug: "nidar-2025",
+    fullDescription: `Add your full project description here. Describe the motivation, approach, results, and what you learned.`,
+    techDetails: [
+      "Add a tech detail here",
+      "Add another tech detail here",
+    ],
+    images: [],
   },
   {
     title: "Smart S.N.U. Hackathon - CV Trash Detection",
@@ -170,12 +184,26 @@ export const PROJECTS: Project[] = [
       "Built a computer vision based trash detection system that routes nearby garbage trucks to locations based on trash volume and current truck location. Implemented semantic segmentation with custom method to approximate trash volume. Qualified for SIH (Smart India Hackathon).",
     tags: ["Computer Vision", "Semantic Segmentation", "Python", "ML"],
     link: "https://github.com/rohitjg13/MORNIS",
+    slug: "cv-trash-detection",
+    fullDescription: `Add your full project description here. Describe the motivation, approach, results, and what you learned.`,
+    techDetails: [
+      "Add a tech detail here",
+      "Add another tech detail here",
+    ],
+    images: [],
   },
   {
     title: "Hackdata 2026 - Multimodal Video RAG",
     description:
       "Using Qwen3-VL for video-grounded VLM reasoning with time-chunked clips/frames in a multimodal RAG search system. Built a media pipeline that chunks content (30-60s), generates multimodal embeddings, indexes in Chroma/Qdrant. Achieves 60-120 fps processing, 10-100x faster than manual review.",
     tags: ["VLM", "RAG", "Video Processing", "Python", "Qwen3"],
+    slug: "hackdata-2026-video-rag",
+    fullDescription: `Add your full project description here. Describe the motivation, approach, results, and what you learned.`,
+    techDetails: [
+      "Add a tech detail here",
+      "Add another tech detail here",
+    ],
+    images: [],
   },
 ];
 

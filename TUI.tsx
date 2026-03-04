@@ -32,6 +32,13 @@ function buildCommands(): Record<string, () => Line[]> {
       { t: "cyan", v: "  clear        →  clear the terminal" },
       { t: "cyan", v: "  exit         →  go back to main site" },
       { t: "spacer", v: "" },
+      { t: "spacer", v: "" },
+      { t: "section-header", v: "── WINDOW CONTROLS ────────────────────────────────" },
+      { t: "spacer", v: "" },
+      { t: "err",     v: "  ● red     →  close pane  (last pane exits to portfolio)" },
+      { t: "warn",    v: "  ● yellow  →  refresh pane" },
+      { t: "success", v: "  ● green   →  open new pane  (max 4)" },
+      { t: "spacer", v: "" },
       { t: "dim", v: "  tip: use ↑ ↓ to browse history | tab to autocomplete" },
     ],
 

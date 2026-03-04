@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { SKILLS, ACHIEVEMENTS, EXPERIENCE, INTERESTS } from "./constants";
+import { SKILLS, ACHIEVEMENTS, EXPERIENCE, INTERESTS, PROJECTS } from "./constants";
 
 const DATA = {
   name: "Ojasw Kant",
@@ -14,6 +14,7 @@ const COMMANDS: Record<string, () => { t: string; v: string }[]> = {
     { t: "section-header", v: "── AVAILABLE COMMANDS ─────────────────────────────" },
     { t: "spacer", v: "" },
     { t: "cyan", v: "  about        →  who am I?" },
+    { t: "cyan", v: "  projects     →  things I've built" },
     { t: "cyan", v: "  skills       →  my tech stack" },
     { t: "cyan", v: "  experience   →  work history" },
     { t: "cyan", v: "  achievements →  awards & highlights" },
@@ -39,6 +40,17 @@ const COMMANDS: Record<string, () => { t: string; v: string }[]> = {
     { t: "spacer", v: "" },
     { t: "success", v: "  ◆  Minor: Mathematics (ML track)" },
     { t: "success", v: "  ◆  School: Shiv Nadar Institute of Eminence | Class of 2028" },
+  ],
+
+  projects: () => [
+    { t: "section-header", v: "── PROJECTS ───────────────────────────────────────" },
+    { t: "spacer", v: "" },
+    ...PROJECTS.flatMap((p, i) => [
+      { t: "success", v: `  ◆ ${p.title}` },
+      { t: "output", v: `    ${p.description}` },
+      { t: "dim", v: `    stack: ${p.tags.join(" · ")}` },
+      { t: "spacer", v: "" },
+    ]),
   ],
 
   skills: () => [

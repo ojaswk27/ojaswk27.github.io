@@ -173,7 +173,7 @@ export const PROJECTS: Project[] = [
   {
     title: "NIDAR 2025 - Autonomous Multi-Drone SAR System",
     description:
-      "I developed a fully autonomous multi-drone search and rescue system for disaster management scenarios. My responsibilities included computer vision model training, inference optimisation, and deployment pipelines, alongside autonomy architecture design, CAD analysis, and physical fabrication and assembly.",
+      "We developed a fully autonomous multi-drone search and rescue system for disaster management scenarios. My responsibilities included computer vision model training, inference optimisation, and deployment pipelines, alongside autonomy architecture design, CAD analysis, and physical fabrication and assembly.",
     tags: ["Computer Vision", "Autonomous Systems", "Python", "CAD", "Drones"],
     slug: "nidar-2025",
     fullDescription: nidarMd,
@@ -200,7 +200,7 @@ export const PROJECTS: Project[] = [
   {
     title: "Hackdata 2026 - Multimodal Video RAG",
     description:
-      "I built a multimodal retrieval-augmented generation system for video understanding, utilising Qwen3-VL for video-grounded reasoning over time-chunked clips and frames. The media pipeline segments content into 30–60s chunks, generates multimodal embeddings, and indexes them in Chroma/Qdrant, achieving 60–120 fps throughput — up to 100x faster than manual review.",
+      "We built a multimodal retrieval-augmented generation system for video understanding, utilising Qwen3-VL for video-grounded reasoning over time-chunked clips and frames. The media pipeline segments content into 30–60s chunks, generates multimodal embeddings, and indexes them in Chroma/Qdrant, achieving 60–120 fps throughput — up to 100x faster than manual review.",
     tags: ["VLM", "RAG", "Video Processing", "Python", "Qwen3"],
     slug: "hackdata-2026-video-rag",
     fullDescription: videoRagMd,

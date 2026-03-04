@@ -200,7 +200,7 @@ export const PROJECTS: Project[] = [
   {
     title: "Hackdata 2026 - Multimodal Video RAG",
     description:
-      "We built a multimodal retrieval-augmented generation system for video understanding, utilising Qwen3-VL for video-grounded reasoning over time-chunked clips and frames. The media pipeline segments content into 30–60s chunks, generates multimodal embeddings, and indexes them in Chroma/Qdrant, achieving 60–120 fps throughput — up to 100x faster than manual review.",
+      "We are building a multimodal retrieval-augmented generation system for video understanding, utilising Qwen3-VL for video-grounded reasoning over time-chunked clips and frames. The media pipeline segments content into 30–60s chunks, generates multimodal embeddings, and indexes them in Chroma/Qdrant, targeting 60–120 fps throughput — up to 100x faster than manual review.",
     tags: ["VLM", "RAG", "Video Processing", "Python", "Qwen3"],
     slug: "hackdata-2026-video-rag",
     fullDescription: videoRagMd,

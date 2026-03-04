@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { SKILLS, ACHIEVEMENTS, EXPERIENCE, INTERESTS, PROJECTS } from "./constants";
+
+// ─── Data ──────────────────────────────────────────────────────────
 
 const DATA = {
   name: "Ojasw Kant",
@@ -9,114 +11,143 @@ const DATA = {
   linkedin: "linkedin.com/in/ojasw-kant-169aa032a",
 };
 
-const COMMANDS: Record<string, () => { t: string; v: string }[]> = {
-  help: () => [
-    { t: "section-header", v: "── AVAILABLE COMMANDS ─────────────────────────────" },
-    { t: "spacer", v: "" },
-    { t: "cyan", v: "  about        →  who am I?" },
-    { t: "cyan", v: "  projects     →  things I've built" },
-    { t: "cyan", v: "  skills       →  my tech stack" },
-    { t: "cyan", v: "  experience   →  work history" },
-    { t: "cyan", v: "  achievements →  awards & highlights" },
-    { t: "cyan", v: "  interests    →  what I'm into" },
-    { t: "cyan", v: "  contact      →  get in touch" },
-    { t: "cyan", v: "  whoami       →  quick identity check" },
-    { t: "cyan", v: "  fetch        →  system & browser info" },
-    { t: "cyan", v: "  clear        →  clear the terminal" },
-    { t: "cyan", v: "  exit         →  go back to main site" },
-    { t: "spacer", v: "" },
-    { t: "dim", v: "  tip: use ↑ ↓ to browse history" },
-  ],
+// ─── Commands ──────────────────────────────────────────────────────
 
-  about: () => [
-    { t: "section-header", v: "── ABOUT ME ───────────────────────────────────────" },
-    { t: "spacer", v: "" },
-    { t: "output", v: "  I am a second-year B.Tech Computer Science student with a focus" },
-    { t: "output", v: "  on the intersection of software and hardware systems." },
-    { t: "spacer", v: "" },
-    { t: "output", v: "  My work spans autonomous systems, computer vision, and ML pipelines," },
-    { t: "output", v: "  with practical experience in drone platforms, embedded hardware," },
-    { t: "output", v: "  and reinforcement learning applications." },
-    { t: "spacer", v: "" },
-    { t: "success", v: "  ◆  Minor: Mathematics (ML track)" },
-    { t: "success", v: "  ◆  Shiv Nadar Institute of Eminence | Class of 2028" },
-  ],
+type Line = { t: string; v: string };
 
-  projects: () => [
-    { t: "section-header", v: "── PROJECTS ───────────────────────────────────────" },
-    { t: "spacer", v: "" },
-    ...PROJECTS.flatMap((p, i) => [
-      { t: "success", v: `  ◆ ${p.title}` },
-      { t: "output", v: `    ${p.description}` },
-      { t: "dim", v: `    stack: ${p.tags.join(" · ")}` },
+function buildCommands(): Record<string, () => Line[]> {
+  return {
+    help: () => [
+      { t: "section-header", v: "── AVAILABLE COMMANDS ─────────────────────────────" },
       { t: "spacer", v: "" },
-    ]),
-  ],
-
-  skills: () => [
-    { t: "section-header", v: "── SKILLS ─────────────────────────────────────────" },
-    { t: "spacer", v: "" },
-    ...SKILLS.map((skill) => ({ t: "cyan", v: `  ▸ ${skill.name}` })),
-  ],
-
-  experience: () => [
-    { t: "section-header", v: "── EXPERIENCE ─────────────────────────────────────" },
-    { t: "spacer", v: "" },
-    ...EXPERIENCE.flatMap((exp) => [
-      { t: "success", v: `  ◆ ${exp.role}` },
-      { t: "cyan", v: `    @ ${exp.company}` },
-      { t: "dim", v: `    ${exp.duration}` },
-      { t: "output", v: `    ${exp.descriptionPoints[0]}` },
+      { t: "cyan", v: "  about        →  who am I?" },
+      { t: "cyan", v: "  projects     →  things I've built" },
+      { t: "cyan", v: "  skills       →  my tech stack" },
+      { t: "cyan", v: "  experience   →  work history" },
+      { t: "cyan", v: "  achievements →  awards & highlights" },
+      { t: "cyan", v: "  interests    →  what I'm into" },
+      { t: "cyan", v: "  contact      →  get in touch" },
+      { t: "cyan", v: "  whoami       →  quick identity check" },
+      { t: "cyan", v: "  fetch        →  system & browser info" },
+      { t: "cyan", v: "  clear        →  clear the terminal" },
+      { t: "cyan", v: "  exit         →  go back to main site" },
       { t: "spacer", v: "" },
-    ]),
-  ],
+      { t: "dim", v: "  tip: use ↑ ↓ to browse history | tab to autocomplete" },
+    ],
 
-  achievements: () => [
-    { t: "section-header", v: "── ACHIEVEMENTS ───────────────────────────────────" },
-    { t: "spacer", v: "" },
-    ...ACHIEVEMENTS.flatMap((ach) => [
-      { t: "success", v: `  ★ ${ach.title}` },
-      { t: "dim", v: `    ${ach.event} · ${ach.date}` },
+    about: () => [
+      { t: "section-header", v: "── ABOUT ME ───────────────────────────────────────" },
       { t: "spacer", v: "" },
-    ]),
-  ],
+      { t: "output", v: "  I am a second-year B.Tech Computer Science student with a focus" },
+      { t: "output", v: "  on the intersection of software and hardware systems." },
+      { t: "spacer", v: "" },
+      { t: "output", v: "  My work spans autonomous systems, computer vision, and ML pipelines," },
+      { t: "output", v: "  with practical experience in drone platforms, embedded hardware," },
+      { t: "output", v: "  and reinforcement learning applications." },
+      { t: "spacer", v: "" },
+      { t: "success", v: "  ◆  Minor: Mathematics (ML track)" },
+      { t: "success", v: "  ◆  Shiv Nadar Institute of Eminence | Class of 2028" },
+    ],
 
-  interests: () => [
-    { t: "section-header", v: "── INTERESTS ──────────────────────────────────────" },
-    { t: "spacer", v: "" },
-    ...INTERESTS.map((interest) => ({ t: "output", v: `  ◇ ${interest}` })),
-  ],
+    projects: () => [
+      { t: "section-header", v: "── PROJECTS ───────────────────────────────────────" },
+      { t: "spacer", v: "" },
+      ...PROJECTS.flatMap((p) => [
+        { t: "success", v: `  ◆ ${p.title}` },
+        { t: "output", v: `    ${p.description}` },
+        { t: "dim", v: `    stack: ${p.tags.join(" · ")}` },
+        { t: "spacer", v: "" },
+      ]),
+    ],
 
-  contact: () => [
-    { t: "section-header", v: "── CONTACT ────────────────────────────────────────" },
-    { t: "spacer", v: "" },
-    { t: "cyan", v: "  email     →  " + DATA.email },
-    { t: "cyan", v: "  github    →  " + DATA.github },
-    { t: "cyan", v: "  linkedin  →  " + DATA.linkedin },
-    { t: "spacer", v: "" },
-    { t: "dim", v: "  open to internships & research collabs :)" },
-  ],
+    skills: () => [
+      { t: "section-header", v: "── SKILLS ─────────────────────────────────────────" },
+      { t: "spacer", v: "" },
+      ...SKILLS.map((skill) => ({ t: "cyan", v: `  ▸ ${skill.name}` })),
+    ],
 
-  whoami: () => [
-    { t: "output", v: `  ${DATA.name}` },
-    { t: "dim", v: `  CS undergrad @ Shiv Nadar Institute of Eminence` },
-    { t: "dim", v: `  Class of 2028 · Minor in Mathematics (ML track)` },
-  ],
+    experience: () => [
+      { t: "section-header", v: "── EXPERIENCE ─────────────────────────────────────" },
+      { t: "spacer", v: "" },
+      ...EXPERIENCE.flatMap((exp) => [
+        { t: "success", v: `  ◆ ${exp.role}` },
+        { t: "cyan", v: `    @ ${exp.company}` },
+        { t: "dim", v: `    ${exp.duration}` },
+        { t: "output", v: `    ${exp.descriptionPoints[0]}` },
+        { t: "spacer", v: "" },
+      ]),
+    ],
 
-  clear: () => {
-    return [];
-  },
-};
+    achievements: () => [
+      { t: "section-header", v: "── ACHIEVEMENTS ───────────────────────────────────" },
+      { t: "spacer", v: "" },
+      ...ACHIEVEMENTS.flatMap((ach) => [
+        { t: "success", v: `  ★ ${ach.title}` },
+        { t: "dim", v: `    ${ach.event} · ${ach.date}` },
+        { t: "spacer", v: "" },
+      ]),
+    ],
 
-export default function TUI() {
-  const outputRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [lines, setLines] = React.useState<{ t: string; v: string }[]>([]);
-  const [history, setHistory] = React.useState<string[]>([]);
-  const [histIdx, setHistIdx] = React.useState(-1);
-  const [isCleared, setIsCleared] = React.useState(false);
+    interests: () => [
+      { t: "section-header", v: "── INTERESTS ──────────────────────────────────────" },
+      { t: "spacer", v: "" },
+      ...INTERESTS.map((interest) => ({ t: "output", v: `  ◇ ${interest}` })),
+    ],
 
-  const bootLines = [
+    contact: () => [
+      { t: "section-header", v: "── CONTACT ────────────────────────────────────────" },
+      { t: "spacer", v: "" },
+      { t: "cyan", v: "  email     →  " + DATA.email },
+      { t: "cyan", v: "  github    →  " + DATA.github },
+      { t: "cyan", v: "  linkedin  →  " + DATA.linkedin },
+      { t: "spacer", v: "" },
+      { t: "dim", v: "  open to internships & research collabs :)" },
+    ],
+
+    whoami: () => [
+      { t: "output", v: `  ${DATA.name}` },
+      { t: "dim", v: "  CS undergrad @ Shiv Nadar Institute of Eminence" },
+      { t: "dim", v: "  Class of 2028 · Minor in Mathematics (ML track)" },
+    ],
+
+    fetch: () => {
+      const ua = navigator.userAgent;
+      const browser =
+        ua.includes("Chrome") && !ua.includes("Edg") ? "Chrome" :
+        ua.includes("Firefox") ? "Firefox" :
+        ua.includes("Safari") && !ua.includes("Chrome") ? "Safari" :
+        ua.includes("Edg") ? "Edge" : "Unknown";
+      const os =
+        ua.includes("Windows") ? "Windows" :
+        ua.includes("Mac") ? "macOS" :
+        ua.includes("Linux") ? "Linux" :
+        ua.includes("Android") ? "Android" :
+        ua.includes("iPhone") || ua.includes("iPad") ? "iOS" : "Unknown";
+      const now = new Date();
+      const time = now.toLocaleTimeString();
+      const date = now.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+      const res = `${window.screen.width}×${window.screen.height}`;
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      return [
+        { t: "section-header", v: "── FETCH ──────────────────────────────────────────" },
+        { t: "spacer", v: "" },
+        { t: "success", v: `  os         ${os}` },
+        { t: "success", v: `  browser    ${browser}` },
+        { t: "success", v: `  resolution ${res}` },
+        { t: "success", v: `  timezone   ${tz}` },
+        { t: "success", v: `  date       ${date}` },
+        { t: "success", v: `  time       ${time}` },
+      ];
+    },
+
+    clear: () => [],
+  };
+}
+
+// ─── Boot lines ────────────────────────────────────────────────────
+
+function makeBootLines(): Line[] {
+  return [
     { t: "spacer", v: "" },
     { t: "success", v: "  ██╗  ██╗███████╗██╗     ██╗      ██████╗ ██╗" },
     { t: "success", v: "  ██║  ██║██╔════╝██║     ██║     ██╔═══██╗██║" },
@@ -131,48 +162,62 @@ export default function TUI() {
     { t: "output", v: `  I'm ${DATA.name}, and this is my terminal portfolio.` },
     { t: "spacer", v: "" },
     { t: "cyan", v: "  Type 'help' to see what you can explore." },
-    { t: "dim", v: "  Type 'about', 'skills', 'contact'..." },
+    { t: "dim", v: "  Type 'about', 'projects', 'skills', 'contact'..." },
     { t: "spacer", v: "" },
   ];
+}
 
+// ─── TerminalPane ──────────────────────────────────────────────────
+
+interface TerminalPaneProps {
+  paneId: number;
+  paneNumber: number;
+  isActive: boolean;
+  paneCount: number;
+  onFocus: () => void;
+  onClose: () => void;
+  onNew: () => void;
+}
+
+function TerminalPane({ paneId, paneNumber, isActive, paneCount, onFocus, onClose, onNew }: TerminalPaneProps) {
+  const outputRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [lines, setLines] = useState<Line[]>(makeBootLines());
+  const [history, setHistory] = useState<string[]>([]);
+  const [histIdx, setHistIdx] = useState(-1);
+  const COMMANDS = buildCommands();
+
+  // Focus input when pane becomes active
   useEffect(() => {
-    if (!isCleared) {
-      setLines(bootLines);
-    }
-  }, [isCleared]);
+    if (isActive) inputRef.current?.focus();
+  }, [isActive]);
 
+  // Scroll to bottom on new lines
   useEffect(() => {
     if (outputRef.current) {
       outputRef.current.scrollTop = outputRef.current.scrollHeight;
     }
   }, [lines]);
 
-  const appendLine = (text: string, cls = "output") => {
+  const appendLine = useCallback((text: string, cls = "output") => {
     setLines((prev) => [...prev, { t: cls, v: text }]);
-  };
+  }, []);
 
-  const printLines = (newLines: { t: string; v: string }[], callback?: () => void) => {
+  const printLines = useCallback((newLines: Line[]) => {
     newLines.forEach((l, i) => {
       setTimeout(() => {
         setLines((prev) => [...prev, l]);
-        if (i === newLines.length - 1 && callback) {
-          callback();
-        }
-      }, i * 30);
+      }, i * 25);
     });
-  };
+  }, []);
 
-  const handleCommand = (cmd: string) => {
-    const trimmed = cmd.trim().toLowerCase();
-    
-    if (trimmed === "exit") {
-      window.location.href = "/";
-      return;
-    }
+  const handleCommand = useCallback((raw: string) => {
+    const trimmed = raw.trim().toLowerCase();
+
+    if (trimmed === "exit") { window.location.href = "/"; return; }
 
     if (trimmed === "clear") {
       setLines([]);
-      setIsCleared(true);
       return;
     }
 
@@ -185,42 +230,36 @@ export default function TUI() {
     } else if (trimmed !== "") {
       appendLine(`  command not found: ${trimmed}  (try 'help')`, "err");
     }
-  };
+  }, [appendLine, printLines]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      const raw = inputRef.current?.value.trim() || "";
+      const raw = inputRef.current?.value ?? "";
       inputRef.current!.value = "";
       setHistIdx(-1);
-
-      appendLine(`guest@portfolio:~$ ${raw}`, "prompt");
-
-      if (!raw) return;
-
+      appendLine(`guest@portfolio [${paneNumber}]:~$ ${raw}`, "prompt");
+      if (!raw.trim()) return;
       setHistory((prev) => [raw, ...prev]);
       handleCommand(raw);
-
       setTimeout(() => {
-        if (outputRef.current) {
-          outputRef.current.scrollTop = outputRef.current.scrollHeight;
-        }
+        if (outputRef.current) outputRef.current.scrollTop = outputRef.current.scrollHeight;
       }, 100);
     }
 
     if (e.key === "ArrowUp") {
       e.preventDefault();
       if (histIdx < history.length - 1) {
-        const newIdx = histIdx + 1;
-        setHistIdx(newIdx);
-        inputRef.current!.value = history[newIdx];
+        const idx = histIdx + 1;
+        setHistIdx(idx);
+        inputRef.current!.value = history[idx];
       }
     }
     if (e.key === "ArrowDown") {
       e.preventDefault();
       if (histIdx > 0) {
-        const newIdx = histIdx - 1;
-        setHistIdx(newIdx);
-        inputRef.current!.value = history[newIdx];
+        const idx = histIdx - 1;
+        setHistIdx(idx);
+        inputRef.current!.value = history[idx];
       } else {
         setHistIdx(-1);
         inputRef.current!.value = "";
@@ -229,234 +268,259 @@ export default function TUI() {
 
     if (e.key === "Tab") {
       e.preventDefault();
-      const partial = inputRef.current?.value.trim().toLowerCase() || "";
+      const partial = inputRef.current?.value.trim().toLowerCase() ?? "";
       const match = Object.keys(COMMANDS).find((c) => c.startsWith(partial));
-      if (match) {
-        inputRef.current!.value = match;
-      }
+      if (match) inputRef.current!.value = match;
     }
   };
 
+  const canAddPane = paneCount < 4;
+
   return (
     <div
+      onClick={onFocus}
       style={{
-        background: "#0d0f0e",
-        color: "#e8f0eb",
-        fontFamily: "'JetBrains Mono', 'Courier New', monospace",
-        fontSize: "14px",
-        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        background: "#111412",
+        border: `1px solid ${isActive ? "#1e2a22" : "#141a16"}`,
+        borderRadius: "8px",
         overflow: "hidden",
-        padding: "20px",
+        transition: "filter 0.3s ease",
+        filter: isActive ? "none" : "saturate(0.2) brightness(0.5)",
+        cursor: isActive ? "default" : "pointer",
       }}
     >
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
-        
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        :root {
-          --bg: #0d0f0e;
-          --surface: #111412;
-          --green: #39ff84;
-          --green-dim: #1a7a3e;
-          --amber: #f5a623;
-          --cyan: #00e5ff;
-          --red: #ff4c4c;
-          --white: #e8f0eb;
-          --muted: #4a5c50;
-          --border: #1e2a22;
-        }
+      {/* Titlebar */}
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+        padding: "10px 14px",
+        borderBottom: "1px solid #1e2a22",
+        flexShrink: 0,
+      }}>
+        {/* Red - close */}
+        <div
+          onClick={(e) => { e.stopPropagation(); onClose(); }}
+          title="Close pane"
+          style={{
+            width: 12, height: 12, borderRadius: "50%",
+            background: "#ff5f57",
+            cursor: "pointer",
+            flexShrink: 0,
+          }}
+        />
+        {/* Yellow - refresh */}
+        <div
+          onClick={(e) => { e.stopPropagation(); setLines(makeBootLines()); setHistory([]); setHistIdx(-1); }}
+          title="Refresh pane"
+          style={{
+            width: 12, height: 12, borderRadius: "50%",
+            background: "#febc2e",
+            cursor: "pointer",
+            flexShrink: 0,
+          }}
+        />
+        {/* Green - new pane */}
+        <div
+          onClick={(e) => { e.stopPropagation(); if (canAddPane) onNew(); }}
+          title={canAddPane ? "New pane" : "Max 4 panes"}
+          style={{
+            width: 12, height: 12, borderRadius: "50%",
+            background: canAddPane ? "#28c840" : "#1a4a22",
+            cursor: canAddPane ? "pointer" : "not-allowed",
+            flexShrink: 0,
+          }}
+        />
+        <span style={{
+          marginLeft: "auto",
+          color: "#4a5c50",
+          fontSize: "11px",
+          letterSpacing: "0.08em",
+          fontFamily: "'JetBrains Mono', monospace",
+        }}>
+          guest@portfolio [{paneNumber}] ~ bash
+        </span>
+      </div>
 
-        #terminal-container {
-          width: 100%;
-          max-width: 800px;
-          height: 90vh;
-          max-height: 700px;
-          background: var(--surface);
-          border: 1px solid var(--border);
-          border-radius: 12px;
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        }
-
-        #titlebar {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 12px 16px;
-          border-bottom: 1px solid var(--border);
-          flex-shrink: 0;
-        }
-        .dot { width: 12px; height: 12px; border-radius: 50%; }
-        .dot-r { background: #ff5f57; }
-        .dot-y { background: #febc2e; }
-        .dot-g { background: #28c840; }
-        #titlebar span {
-          margin-left: auto;
-          color: var(--muted);
-          font-size: 12px;
-          letter-spacing: 0.08em;
-        }
-
-        #output {
-          flex: 1;
-          overflow-y: auto;
-          padding: 18px 16px 8px;
-          scroll-behavior: smooth;
-        }
-        #output::-webkit-scrollbar { width: 4px; }
-        #output::-webkit-scrollbar-track { background: transparent; }
-        #output::-webkit-scrollbar-thumb { background: var(--green-dim); border-radius: 2px; }
-
-        .line { white-space: pre-wrap; word-break: break-word; margin-bottom: 2px; }
-        .line.prompt { color: var(--green); }
-        .line.cmd-echo { color: var(--white); }
-        .line.output { color: var(--white); }
-        .line.dim { color: var(--muted); }
-        .line.success { color: var(--green); }
-        .line.warn { color: var(--amber); }
-        .line.err { color: var(--red); }
-        .line.cyan { color: var(--cyan); }
-        .line.section-header {
-          color: var(--green);
-          font-weight: 700;
-          margin-top: 6px;
-          letter-spacing: 0.06em;
-          text-shadow: 0 0 10px rgba(57, 255, 132, 0.3);
-        }
-        .line.spacer { margin-bottom: 6px; }
-
-        #input-row {
-          display: flex;
-          align-items: center;
-          gap: 0;
-          padding: 10px 16px 18px;
-          border-top: 1px solid var(--border);
-          flex-shrink: 0;
-        }
-        #prompt-label {
-          color: var(--green);
-          white-space: nowrap;
-          user-select: none;
-        }
-        #prompt-label .host { color: var(--cyan); }
-        #prompt-label .sep { color: var(--muted); }
-        #prompt-label .path { color: var(--amber); }
-
-        #cmd-input {
-          flex: 1;
-          background: transparent;
-          border: none;
-          outline: none;
-          color: var(--white);
-          font-family: var(--font);
-          font-size: 14px;
-          caret-color: var(--green);
-          margin-left: 6px;
-        }
-
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-        .cursor { display: inline-block; width: 8px; height: 1em; background: var(--green); animation: blink 1s step-end infinite; vertical-align: text-bottom; }
-
-        @keyframes fadein { from{opacity:0;transform:translateY(2px)} to{opacity:1;transform:none} }
-        .line { animation: fadein 0.08s ease-out both; }
-
-        body::after {
-          content: '';
-          position: fixed; inset: 0;
-          background: repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 2px,
-            rgba(0,0,0,0.04) 2px,
-            rgba(0,0,0,0.04) 4px
-          );
-          pointer-events: none;
-          z-index: 9999;
-        }
-
-        .terminal-link {
-          color: #00e5ff;
-          text-decoration: underline;
-          cursor: pointer;
-        }
-        .terminal-link:hover {
-          color: #39ff84;
-        }
-      `}</style>
-
-      <div id="terminal-container">
-        <div id="titlebar">
-          <div className="dot dot-r" onClick={() => window.location.href = '/'} style={{ cursor: 'pointer' }} title="Go to portfolio"></div>
-          <div className="dot dot-y" onClick={() => window.location.reload()} style={{ cursor: 'pointer' }} title="Refresh"></div>
-          <div className="dot dot-g"></div>
-          <span>guest@portfolio ~ bash</span>
-        </div>
-
-      <div id="output" ref={outputRef}>
+      {/* Output */}
+      <div
+        ref={outputRef}
+        style={{
+          flex: 1,
+          overflowY: "auto",
+          padding: "14px 14px 6px",
+          scrollBehavior: "smooth",
+        }}
+      >
         {lines.map((line, i) => (
-          <div key={i} className={`line ${line.t}`}>
+          <div key={i} className={`line ${line.t}`} style={{ fontSize: paneCount >= 3 ? "12px" : "14px" }}>
             {line.v}
           </div>
         ))}
       </div>
 
-      <div id="input-row">
-        <div id="prompt-label">
-          <span className="host">guest@portfolio</span>
-          <span className="sep">:</span>
-          <span className="path">~</span>
-          <span className="sep">$</span>
-        </div>
+      {/* Input */}
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        padding: "8px 14px 14px",
+        borderTop: "1px solid #1e2a22",
+        flexShrink: 0,
+      }}>
+        <span style={{
+          color: "#00e5ff",
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: paneCount >= 3 ? "12px" : "14px",
+          whiteSpace: "nowrap",
+          userSelect: "none",
+        }}>
+          guest@portfolio<span style={{ color: "#4a5c50" }}>:</span>
+          <span style={{ color: "#f5a623" }}>~</span>
+          <span style={{ color: "#4a5c50" }}>$</span>
+        </span>
         <input
           ref={inputRef}
-          id="cmd-input"
           type="text"
           autoComplete="off"
           spellCheck={false}
-          autoFocus
           onKeyDown={handleKeyDown}
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            flex: 1,
+            background: "transparent",
+            border: "none",
+            outline: "none",
+            color: "#e8f0eb",
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: paneCount >= 3 ? "12px" : "14px",
+            caretColor: "#39ff84",
+            marginLeft: "6px",
+          }}
         />
       </div>
+    </div>
+  );
+}
 
-      <div
-        style={{
-          position: "fixed",
-          top: 16,
-          right: 16,
-          zIndex: 100,
-        }}
-      >
-        <Link
-          to="/"
-          style={{
-            color: "#4a5c50",
-            fontSize: "12px",
-            textDecoration: "none",
-            padding: "6px 12px",
-            border: "1px solid #1e2a22",
-            borderRadius: "4px",
-            background: "#111412",
-            transition: "all 0.2s",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = "#39ff84";
-            e.currentTarget.style.borderColor = "#39ff84";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = "#4a5c50";
-            e.currentTarget.style.borderColor = "#1e2a22";
-          }}
-        >
-          ← exit
-        </Link>
-      </div>
+// ─── TUIRoot ───────────────────────────────────────────────────────
+
+let nextId = 1;
+
+export default function TUI() {
+  const navigate = useNavigate();
+  const [panes, setPanes] = useState<number[]>([nextId++]);
+  const [activePaneId, setActivePaneId] = useState<number>(panes[0]);
+
+  const addPane = useCallback(() => {
+    if (panes.length >= 4) return;
+    const id = nextId++;
+    setPanes((prev) => [...prev, id]);
+    setActivePaneId(id);
+  }, [panes]);
+
+  const closePane = useCallback((id: number) => {
+    setPanes((prev) => {
+      if (prev.length === 1) {
+        navigate("/");
+        return prev;
+      }
+      const next = prev.filter((p) => p !== id);
+      setActivePaneId((active) => active === id ? next[next.length - 1] : active);
+      return next;
+    });
+  }, [navigate]);
+
+  // Grid layout based on pane count
+  const getGridStyle = (): React.CSSProperties => {
+    switch (panes.length) {
+      case 1: return { gridTemplateColumns: "1fr", gridTemplateRows: "1fr" };
+      case 2: return { gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr" };
+      case 3: return { gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr" };
+      case 4: return { gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr" };
+      default: return {};
+    }
+  };
+
+  // For 3 panes: last pane spans full width in second row
+  const getPaneStyle = (index: number): React.CSSProperties => {
+    if (panes.length === 3 && index === 2) {
+      return { gridColumn: "1 / -1" };
+    }
+    return {};
+  };
+
+  return (
+    <div style={{
+      background: "#0d0f0e",
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "20px",
+      fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+    }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        .line { white-space: pre-wrap; word-break: break-word; margin-bottom: 2px; }
+        .line.prompt { color: #39ff84; }
+        .line.output { color: #e8f0eb; }
+        .line.dim { color: #4a5c50; }
+        .line.success { color: #39ff84; }
+        .line.warn { color: #f5a623; }
+        .line.err { color: #ff4c4c; }
+        .line.cyan { color: #00e5ff; }
+        .line.section-header {
+          color: #39ff84;
+          font-weight: 700;
+          margin-top: 6px;
+          letter-spacing: 0.04em;
+        }
+        .line.spacer { margin-bottom: 6px; }
+
+        div::-webkit-scrollbar { width: 3px; }
+        div::-webkit-scrollbar-track { background: transparent; }
+        div::-webkit-scrollbar-thumb { background: #1a7a3e; border-radius: 2px; }
+
+        body::after {
+          content: '';
+          position: fixed; inset: 0;
+          background: repeating-linear-gradient(
+            0deg, transparent, transparent 2px,
+            rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px
+          );
+          pointer-events: none;
+          z-index: 9999;
+        }
+      `}</style>
+
+      <div style={{
+        width: "100%",
+        maxWidth: panes.length === 1 ? "800px" : "1200px",
+        height: "90vh",
+        display: "grid",
+        gap: "6px",
+        transition: "max-width 0.3s ease",
+        ...getGridStyle(),
+      }}>
+        {panes.map((id, index) => (
+          <div key={id} style={{ minHeight: 0, minWidth: 0, ...getPaneStyle(index) }}>
+            <TerminalPane
+              paneId={id}
+              paneNumber={index + 1}
+              isActive={activePaneId === id}
+              paneCount={panes.length}
+              onFocus={() => setActivePaneId(id)}
+              onClose={() => closePane(id)}
+              onNew={addPane}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

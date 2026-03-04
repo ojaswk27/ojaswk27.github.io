@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import type { Project, Experience, Achievement, Skill } from "./types";
 import { PROJECTS, EXPERIENCE, ACHIEVEMENTS, SKILLS, INTERESTS } from "./constants";
 import ProjectPage from "./ProjectPage";
+import TUI from "./TUI";
 
 function toSlug(title: string): string {
   return title
@@ -543,6 +544,28 @@ function App() {
           <div className="text-center mt-8 text-xs text-gray-500">
             <p>Designed & Built by Ojasw Kant</p>
           </div>
+
+          {/* Subtle TUI corner icon */}
+          <a
+            href="/tui"
+            className="fixed bottom-4 right-4 opacity-20 hover:opacity-60 transition-opacity duration-300"
+            title="Terminal Version"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="4 17 10 11 4 5" />
+              <line x1="12" y1="19" x2="20" y2="19" />
+            </svg>
+          </a>
         </div>
       </div>
     </div>
@@ -554,6 +577,8 @@ export default function Root() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/tui" element={<TUI />} />
+        <Route path="/TUI" element={<TUI />} />
         <Route path="/:slug" element={<ProjectPage />} />
       </Routes>
     </BrowserRouter>

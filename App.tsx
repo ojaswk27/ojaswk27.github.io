@@ -545,10 +545,10 @@ function App() {
             <p>Designed & Built by Ojasw Kant</p>
           </div>
 
-          {/* Subtle TUI corner icon */}
+          {/* Subtle TUI corner icon - desktop only */}
           <a
             href="/tui"
-            className="fixed bottom-4 right-4 opacity-20 hover:opacity-60 transition-opacity duration-300"
+            className="fixed bottom-4 right-4 opacity-20 hover:opacity-60 transition-opacity duration-300 hidden lg:block"
             title="Terminal Version"
           >
             <svg

@@ -167,6 +167,41 @@ function makeBootLines(): Line[] {
   ];
 }
 
+// ─── Layout calculator ─────────────────────────────────────────────
+// Returns { top, left, width, height } as percentages for each pane index
+
+interface PaneRect { top: number; left: number; width: number; height: number; }
+
+const GAP = 0.8; // percent gap between panes
+
+function getLayout(count: number): PaneRect[] {
+  const g = GAP;
+  switch (count) {
+    case 1:
+      return [{ top: 0, left: 0, width: 100, height: 100 }];
+    case 2:
+      return [
+        { top: 0, left: 0,            width: (100 - g) / 2, height: 100 },
+        { top: 0, left: (100 + g) / 2, width: (100 - g) / 2, height: 100 },
+      ];
+    case 3:
+      return [
+        { top: 0,          left: 0,             width: (100 - g) / 2, height: (100 - g) / 2 },
+        { top: 0,          left: (100 + g) / 2, width: (100 - g) / 2, height: (100 - g) / 2 },
+        { top: (100 + g) / 2, left: 0,          width: 100,           height: (100 - g) / 2 },
+      ];
+    case 4:
+      return [
+        { top: 0,             left: 0,             width: (100 - g) / 2, height: (100 - g) / 2 },
+        { top: 0,             left: (100 + g) / 2, width: (100 - g) / 2, height: (100 - g) / 2 },
+        { top: (100 + g) / 2, left: 0,             width: (100 - g) / 2, height: (100 - g) / 2 },
+        { top: (100 + g) / 2, left: (100 + g) / 2, width: (100 - g) / 2, height: (100 - g) / 2 },
+      ];
+    default:
+      return [];
+  }
+}
+
 // ─── TerminalPane ──────────────────────────────────────────────────
 
 interface TerminalPaneProps {
@@ -174,12 +209,21 @@ interface TerminalPaneProps {
   paneNumber: number;
   isActive: boolean;
   paneCount: number;
+  rect: PaneRect;
+  isEntering: boolean;
+  isExiting: boolean;
   onFocus: () => void;
   onClose: () => void;
   onNew: () => void;
 }
 
-function TerminalPane({ paneId, paneNumber, isActive, paneCount, onFocus, onClose, onNew }: TerminalPaneProps) {
+const ANIM_DURATION = 260; // ms
+
+function TerminalPane({
+  paneId, paneNumber, isActive, paneCount,
+  rect, isEntering, isExiting,
+  onFocus, onClose, onNew,
+}: TerminalPaneProps) {
   const outputRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [lines, setLines] = useState<Line[]>(makeBootLines());
@@ -187,12 +231,10 @@ function TerminalPane({ paneId, paneNumber, isActive, paneCount, onFocus, onClos
   const [histIdx, setHistIdx] = useState(-1);
   const COMMANDS = buildCommands();
 
-  // Focus input when pane becomes active
   useEffect(() => {
     if (isActive) inputRef.current?.focus();
   }, [isActive]);
 
-  // Scroll to bottom on new lines
   useEffect(() => {
     if (outputRef.current) {
       outputRef.current.scrollTop = outputRef.current.scrollHeight;
@@ -213,20 +255,11 @@ function TerminalPane({ paneId, paneNumber, isActive, paneCount, onFocus, onClos
 
   const handleCommand = useCallback((raw: string) => {
     const trimmed = raw.trim().toLowerCase();
-
     if (trimmed === "exit") { window.location.href = "/"; return; }
-
-    if (trimmed === "clear") {
-      setLines([]);
-      return;
-    }
-
+    if (trimmed === "clear") { setLines([]); return; }
     if (COMMANDS[trimmed]) {
       const result = COMMANDS[trimmed]();
-      if (result.length > 0) {
-        appendLine("", "spacer");
-        printLines(result);
-      }
+      if (result.length > 0) { appendLine("", "spacer"); printLines(result); }
     } else if (trimmed !== "") {
       appendLine(`  command not found: ${trimmed}  (try 'help')`, "err");
     }
@@ -245,27 +278,15 @@ function TerminalPane({ paneId, paneNumber, isActive, paneCount, onFocus, onClos
         if (outputRef.current) outputRef.current.scrollTop = outputRef.current.scrollHeight;
       }, 100);
     }
-
     if (e.key === "ArrowUp") {
       e.preventDefault();
-      if (histIdx < history.length - 1) {
-        const idx = histIdx + 1;
-        setHistIdx(idx);
-        inputRef.current!.value = history[idx];
-      }
+      if (histIdx < history.length - 1) { const idx = histIdx + 1; setHistIdx(idx); inputRef.current!.value = history[idx]; }
     }
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      if (histIdx > 0) {
-        const idx = histIdx - 1;
-        setHistIdx(idx);
-        inputRef.current!.value = history[idx];
-      } else {
-        setHistIdx(-1);
-        inputRef.current!.value = "";
-      }
+      if (histIdx > 0) { const idx = histIdx - 1; setHistIdx(idx); inputRef.current!.value = history[idx]; }
+      else { setHistIdx(-1); inputRef.current!.value = ""; }
     }
-
     if (e.key === "Tab") {
       e.preventDefault();
       const partial = inputRef.current?.value.trim().toLowerCase() ?? "";
@@ -275,109 +296,76 @@ function TerminalPane({ paneId, paneNumber, isActive, paneCount, onFocus, onClos
   };
 
   const canAddPane = paneCount < 4;
+  const smallFont = paneCount >= 3;
+
+  // Animate: entering → scale from 0.88, exiting → scale to 0.88
+  const animScale = isExiting ? 0.88 : isEntering ? 0.88 : 1;
+  const animOpacity = isExiting ? 0 : isEntering ? 0 : 1;
 
   return (
     <div
       onClick={onFocus}
       style={{
+        position: "absolute",
+        top: `${rect.top}%`,
+        left: `${rect.left}%`,
+        width: `${rect.width}%`,
+        height: `${rect.height}%`,
+        transition: isEntering
+          ? `top ${ANIM_DURATION}ms cubic-bezier(0.22,1,0.36,1),
+             left ${ANIM_DURATION}ms cubic-bezier(0.22,1,0.36,1),
+             width ${ANIM_DURATION}ms cubic-bezier(0.22,1,0.36,1),
+             height ${ANIM_DURATION}ms cubic-bezier(0.22,1,0.36,1),
+             opacity ${ANIM_DURATION}ms ease,
+             transform ${ANIM_DURATION}ms cubic-bezier(0.22,1,0.36,1),
+             filter 0.3s ease`
+          : `top ${ANIM_DURATION}ms cubic-bezier(0.22,1,0.36,1),
+             left ${ANIM_DURATION}ms cubic-bezier(0.22,1,0.36,1),
+             width ${ANIM_DURATION}ms cubic-bezier(0.22,1,0.36,1),
+             height ${ANIM_DURATION}ms cubic-bezier(0.22,1,0.36,1),
+             opacity ${ANIM_DURATION}ms ease,
+             transform ${ANIM_DURATION}ms ease-in,
+             filter 0.3s ease`,
+        opacity: animOpacity,
+        transform: `scale(${animScale})`,
+        filter: isActive ? "none" : "saturate(0.2) brightness(0.5)",
+        cursor: isActive ? "default" : "pointer",
         display: "flex",
         flexDirection: "column",
-        width: "100%",
-        height: "100%",
         background: "#111412",
         border: `1px solid ${isActive ? "#1e2a22" : "#141a16"}`,
         borderRadius: "8px",
         overflow: "hidden",
-        transition: "filter 0.3s ease",
-        filter: isActive ? "none" : "saturate(0.2) brightness(0.5)",
-        cursor: isActive ? "default" : "pointer",
       }}
     >
       {/* Titlebar */}
       <div style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "8px",
-        padding: "10px 14px",
-        borderBottom: "1px solid #1e2a22",
-        flexShrink: 0,
+        display: "flex", alignItems: "center", gap: "8px",
+        padding: "10px 14px", borderBottom: "1px solid #1e2a22", flexShrink: 0,
       }}>
-        {/* Red - close */}
-        <div
-          onClick={(e) => { e.stopPropagation(); onClose(); }}
-          title="Close pane"
-          style={{
-            width: 12, height: 12, borderRadius: "50%",
-            background: "#ff5f57",
-            cursor: "pointer",
-            flexShrink: 0,
-          }}
-        />
-        {/* Yellow - refresh */}
-        <div
-          onClick={(e) => { e.stopPropagation(); setLines(makeBootLines()); setHistory([]); setHistIdx(-1); }}
-          title="Refresh pane"
-          style={{
-            width: 12, height: 12, borderRadius: "50%",
-            background: "#febc2e",
-            cursor: "pointer",
-            flexShrink: 0,
-          }}
-        />
-        {/* Green - new pane */}
-        <div
-          onClick={(e) => { e.stopPropagation(); if (canAddPane) onNew(); }}
-          title={canAddPane ? "New pane" : "Max 4 panes"}
-          style={{
-            width: 12, height: 12, borderRadius: "50%",
-            background: canAddPane ? "#28c840" : "#1a4a22",
-            cursor: canAddPane ? "pointer" : "not-allowed",
-            flexShrink: 0,
-          }}
-        />
-        <span style={{
-          marginLeft: "auto",
-          color: "#4a5c50",
-          fontSize: "11px",
-          letterSpacing: "0.08em",
-          fontFamily: "'JetBrains Mono', monospace",
-        }}>
+        <div onClick={(e) => { e.stopPropagation(); onClose(); }} title="Close pane"
+          style={{ width: 12, height: 12, borderRadius: "50%", background: "#ff5f57", cursor: "pointer", flexShrink: 0 }} />
+        <div onClick={(e) => { e.stopPropagation(); setLines(makeBootLines()); setHistory([]); setHistIdx(-1); }} title="Refresh pane"
+          style={{ width: 12, height: 12, borderRadius: "50%", background: "#febc2e", cursor: "pointer", flexShrink: 0 }} />
+        <div onClick={(e) => { e.stopPropagation(); if (canAddPane) onNew(); }} title={canAddPane ? "New pane" : "Max 4 panes"}
+          style={{ width: 12, height: 12, borderRadius: "50%", background: canAddPane ? "#28c840" : "#1a4a22", cursor: canAddPane ? "pointer" : "not-allowed", flexShrink: 0 }} />
+        <span style={{ marginLeft: "auto", color: "#4a5c50", fontSize: "11px", letterSpacing: "0.08em", fontFamily: "'JetBrains Mono', monospace" }}>
           guest@portfolio [{paneNumber}] ~ bash
         </span>
       </div>
 
       {/* Output */}
-      <div
-        ref={outputRef}
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          padding: "14px 14px 6px",
-          scrollBehavior: "smooth",
-        }}
-      >
+      <div ref={outputRef} style={{ flex: 1, overflowY: "auto", padding: "14px 14px 6px", scrollBehavior: "smooth" }}>
         {lines.map((line, i) => (
-          <div key={i} className={`line ${line.t}`} style={{ fontSize: paneCount >= 3 ? "12px" : "14px" }}>
+          <div key={i} className={`line ${line.t}`} style={{ fontSize: smallFont ? "12px" : "14px" }}>
             {line.v}
           </div>
         ))}
       </div>
 
       {/* Input */}
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        padding: "8px 14px 14px",
-        borderTop: "1px solid #1e2a22",
-        flexShrink: 0,
-      }}>
-        <span style={{
-          color: "#00e5ff",
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: paneCount >= 3 ? "12px" : "14px",
-          whiteSpace: "nowrap",
-          userSelect: "none",
-        }}>
+      <div style={{ display: "flex", alignItems: "center", padding: "8px 14px 14px", borderTop: "1px solid #1e2a22", flexShrink: 0 }}>
+        <span style={{ color: "#00e5ff", fontFamily: "'JetBrains Mono', monospace", fontSize: smallFont ? "12px" : "14px", whiteSpace: "nowrap", userSelect: "none" }}>
           guest@portfolio<span style={{ color: "#4a5c50" }}>:</span>
           <span style={{ color: "#f5a623" }}>~</span>
           <span style={{ color: "#4a5c50" }}>$</span>
@@ -390,15 +378,9 @@ function TerminalPane({ paneId, paneNumber, isActive, paneCount, onFocus, onClos
           onKeyDown={handleKeyDown}
           onClick={(e) => e.stopPropagation()}
           style={{
-            flex: 1,
-            background: "transparent",
-            border: "none",
-            outline: "none",
-            color: "#e8f0eb",
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: paneCount >= 3 ? "12px" : "14px",
-            caretColor: "#39ff84",
-            marginLeft: "6px",
+            flex: 1, background: "transparent", border: "none", outline: "none",
+            color: "#e8f0eb", fontFamily: "'JetBrains Mono', monospace",
+            fontSize: smallFont ? "12px" : "14px", caretColor: "#39ff84", marginLeft: "6px",
           }}
         />
       </div>
@@ -410,58 +392,69 @@ function TerminalPane({ paneId, paneNumber, isActive, paneCount, onFocus, onClos
 
 let nextId = 1;
 
+interface PaneEntry {
+  id: number;
+  entering: boolean;
+  exiting: boolean;
+}
+
 export default function TUI() {
   const navigate = useNavigate();
-  const [panes, setPanes] = useState<number[]>([nextId++]);
-  const [activePaneId, setActivePaneId] = useState<number>(panes[0]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [panes, setPanes] = useState<PaneEntry[]>([{ id: nextId++, entering: false, exiting: false }]);
+  const [activePaneId, setActivePaneId] = useState<number>(panes[0].id);
+
+  // Live IDs (not exiting) drive the layout calculation
+  const liveIds = panes.filter((p) => !p.exiting).map((p) => p.id);
+  const liveCount = liveIds.length;
 
   const addPane = useCallback(() => {
-    if (panes.length >= 4) return;
+    if (liveIds.length >= 4) return;
     const id = nextId++;
-    setPanes((prev) => [...prev, id]);
+    // Insert as entering
+    setPanes((prev) => [...prev, { id, entering: true, exiting: false }]);
     setActivePaneId(id);
-  }, [panes]);
+    // After one frame, flip entering off so transition plays
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setPanes((prev) => prev.map((p) => p.id === id ? { ...p, entering: false } : p));
+      });
+    });
+  }, [liveIds]);
 
   const closePane = useCallback((id: number) => {
-    setPanes((prev) => {
-      if (prev.length === 1) {
-        navigate("/");
-        return prev;
-      }
-      const next = prev.filter((p) => p !== id);
-      setActivePaneId((active) => active === id ? next[next.length - 1] : active);
-      return next;
+    if (liveIds.length === 1) {
+      navigate("/");
+      return;
+    }
+    // Mark as exiting
+    setPanes((prev) => prev.map((p) => p.id === id ? { ...p, exiting: true } : p));
+    // Update active pane immediately
+    setActivePaneId((active) => {
+      if (active !== id) return active;
+      const remaining = liveIds.filter((lid) => lid !== id);
+      return remaining[remaining.length - 1];
     });
-  }, [navigate]);
+    // Remove from state after animation
+    setTimeout(() => {
+      setPanes((prev) => prev.filter((p) => p.id !== id));
+    }, ANIM_DURATION + 20);
+  }, [liveIds, navigate]);
 
-  // Grid layout based on pane count
-  const getGridStyle = (): React.CSSProperties => {
-    switch (panes.length) {
-      case 1: return { gridTemplateColumns: "1fr", gridTemplateRows: "1fr" };
-      case 2: return { gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr" };
-      case 3: return { gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr" };
-      case 4: return { gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr" };
-      default: return {};
-    }
-  };
-
-  // For 3 panes: last pane spans full width in second row
-  const getPaneStyle = (index: number): React.CSSProperties => {
-    if (panes.length === 3 && index === 2) {
-      return { gridColumn: "1 / -1" };
-    }
-    return {};
-  };
+  // Build layout for each pane based on live count
+  const layout = getLayout(liveCount);
 
   return (
     <div style={{
       background: "#0d0f0e",
-      minHeight: "100vh",
+      width: "100vw",
+      height: "100vh",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       padding: "20px",
       fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+      overflow: "hidden",
     }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
@@ -499,28 +492,37 @@ export default function TUI() {
         }
       `}</style>
 
-      <div style={{
-        width: "100%",
-        maxWidth: panes.length === 1 ? "800px" : "1200px",
-        height: "90vh",
-        display: "grid",
-        gap: "6px",
-        transition: "max-width 0.3s ease",
-        ...getGridStyle(),
-      }}>
-        {panes.map((id, index) => (
-          <div key={id} style={{ minHeight: 0, minWidth: 0, ...getPaneStyle(index) }}>
+      {/* Absolutely-positioned container so panes can animate freely */}
+      <div
+        ref={containerRef}
+        style={{
+          position: "relative",
+          width: "calc(100vw - 40px)",
+          height: "calc(100vh - 40px)",
+        }}
+      >
+        {panes.map((pane) => {
+          // Find this pane's index in the live list for layout
+          const liveIndex = liveIds.indexOf(pane.id);
+          // Exiting panes use their last known rect (before removal)
+          const rect = liveIndex >= 0 ? layout[liveIndex] : { top: 50, left: 50, width: 0, height: 0 };
+
+          return (
             <TerminalPane
-              paneId={id}
-              paneNumber={index + 1}
-              isActive={activePaneId === id}
-              paneCount={panes.length}
-              onFocus={() => setActivePaneId(id)}
-              onClose={() => closePane(id)}
+              key={pane.id}
+              paneId={pane.id}
+              paneNumber={liveIndex >= 0 ? liveIndex + 1 : 0}
+              isActive={activePaneId === pane.id}
+              paneCount={liveCount}
+              rect={rect}
+              isEntering={pane.entering}
+              isExiting={pane.exiting}
+              onFocus={() => setActivePaneId(pane.id)}
+              onClose={() => closePane(pane.id)}
               onNew={addPane}
             />
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

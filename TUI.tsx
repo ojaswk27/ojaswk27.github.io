@@ -31,15 +31,15 @@ const COMMANDS: Record<string, () => { t: string; v: string }[]> = {
   about: () => [
     { t: "section-header", v: "── ABOUT ME ───────────────────────────────────────" },
     { t: "spacer", v: "" },
-    { t: "output", v: "  Hey! I'm Ojasw Kant — a 2nd-year CS undergrad" },
-    { t: "output", v: "  passionate about the intersection of software and hardware." },
+    { t: "output", v: "  I am a second-year B.Tech Computer Science student with a focus" },
+    { t: "output", v: "  on the intersection of software and hardware systems." },
     { t: "spacer", v: "" },
-    { t: "output", v: "  I build autonomous systems, drone platforms, and ML pipelines." },
-    { t: "output", v: "  When I'm not flying drones, I'm obsessing over computer vision," },
-    { t: "output", v: "  reinforcement learning, and systems programming." },
+    { t: "output", v: "  My work spans autonomous systems, computer vision, and ML pipelines," },
+    { t: "output", v: "  with practical experience in drone platforms, embedded hardware," },
+    { t: "output", v: "  and reinforcement learning applications." },
     { t: "spacer", v: "" },
     { t: "success", v: "  ◆  Minor: Mathematics (ML track)" },
-    { t: "success", v: "  ◆  School: Shiv Nadar Institute of Eminence | Class of 2028" },
+    { t: "success", v: "  ◆  Shiv Nadar Institute of Eminence | Class of 2028" },
   ],
 
   projects: () => [

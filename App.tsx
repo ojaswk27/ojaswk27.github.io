@@ -414,7 +414,7 @@ function App() {
               </a>
             </div>
             <p className="text-sm text-gray-400 max-w-2xl mx-auto">
-              Focused on backend/software + ML systems for autonomous applications. Building data/ML pipelines and autonomous systems.
+              I focus on software and ML systems for autonomous applications, with experience building data pipelines, computer vision models, and embedded hardware integrations.
             </p>
           </div>
 

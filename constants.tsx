@@ -1,6 +1,11 @@
 import React from "react";
 import type { Project, Experience, Achievement, Skill } from "./types";
 
+import aiAerospaceMd from "./projects/ai-aerospace-design-assistant.md?raw";
+import nidarMd from "./projects/nidar-2025.md?raw";
+import cvTrashMd from "./projects/cv-trash-detection.md?raw";
+import videoRagMd from "./projects/hackdata-2026-video-rag.md?raw";
+
 // SVG Icons for Skills
 const PythonIcon = () => (
   <svg
@@ -154,11 +159,11 @@ export const PROJECTS: Project[] = [
   {
     title: "AI-Powered Aerospace Design Assistant",
     description:
-      "Built an AI assistant that turns text requirements into preliminary aircraft/rocket/satellite designs with computed specs + citations. Uses RAG over 30+ arXiv/NASA papers with embeddings and vehicle-type vector index. Includes LLM-based auto-fill and validation checks to prevent unrealistic sizing.",
+      "I developed an AI assistant that translates natural language requirements into preliminary aerospace vehicle designs with computed specifications and source citations. It implements retrieval-augmented generation over 30+ arXiv and NASA papers using a vehicle-type vector index, with LLM-based auto-fill and validation to enforce realistic design constraints.",
     tags: ["Python", "RAG", "LLM", "Aerospace", "ML"],
     link: "https://github.com/ojaswk27",
     slug: "ai-aerospace-design-assistant",
-    fullDescription: `Add your full project description here. Describe the motivation, approach, results, and what you learned.`,
+    fullDescription: aiAerospaceMd,
     techDetails: [
       "Add a tech detail here",
       "Add another tech detail here",
@@ -168,10 +173,10 @@ export const PROJECTS: Project[] = [
   {
     title: "NIDAR 2025 - Autonomous Multi-Drone SAR System",
     description:
-      "Developed a fully autonomous multi-drone Search And Rescue system for disaster management. Handled computer vision model training, post-processing and optimization for deployment. Implemented autonomy architecture and performed CAD analysis, fabrication and assembly.",
+      "I developed a fully autonomous multi-drone search and rescue system for disaster management scenarios. My responsibilities included computer vision model training, inference optimisation, and deployment pipelines, alongside autonomy architecture design, CAD analysis, and physical fabrication and assembly.",
     tags: ["Computer Vision", "Autonomous Systems", "Python", "CAD", "Drones"],
     slug: "nidar-2025",
-    fullDescription: `Add your full project description here. Describe the motivation, approach, results, and what you learned.`,
+    fullDescription: nidarMd,
     techDetails: [
       "Add a tech detail here",
       "Add another tech detail here",
@@ -181,11 +186,11 @@ export const PROJECTS: Project[] = [
   {
     title: "Smart S.N.U. Hackathon - CV Trash Detection",
     description:
-      "Built a computer vision based trash detection system that routes nearby garbage trucks to locations based on trash volume and current truck location. Implemented semantic segmentation with custom method to approximate trash volume. Qualified for SIH (Smart India Hackathon).",
+      "I built a computer vision system for urban waste detection that dynamically routes garbage collection vehicles based on estimated trash volume and real-time truck location. It employs semantic segmentation with a custom volumetric approximation method. The project qualified for the Smart India Hackathon (SIH).",
     tags: ["Computer Vision", "Semantic Segmentation", "Python", "ML"],
     link: "https://github.com/rohitjg13/MORNIS",
     slug: "cv-trash-detection",
-    fullDescription: `Add your full project description here. Describe the motivation, approach, results, and what you learned.`,
+    fullDescription: cvTrashMd,
     techDetails: [
       "Add a tech detail here",
       "Add another tech detail here",
@@ -195,10 +200,10 @@ export const PROJECTS: Project[] = [
   {
     title: "Hackdata 2026 - Multimodal Video RAG",
     description:
-      "Using Qwen3-VL for video-grounded VLM reasoning with time-chunked clips/frames in a multimodal RAG search system. Built a media pipeline that chunks content (30-60s), generates multimodal embeddings, indexes in Chroma/Qdrant. Achieves 60-120 fps processing, 10-100x faster than manual review.",
+      "I built a multimodal retrieval-augmented generation system for video understanding, utilising Qwen3-VL for video-grounded reasoning over time-chunked clips and frames. The media pipeline segments content into 30–60s chunks, generates multimodal embeddings, and indexes them in Chroma/Qdrant, achieving 60–120 fps throughput — up to 100x faster than manual review.",
     tags: ["VLM", "RAG", "Video Processing", "Python", "Qwen3"],
     slug: "hackdata-2026-video-rag",
-    fullDescription: `Add your full project description here. Describe the motivation, approach, results, and what you learned.`,
+    fullDescription: videoRagMd,
     techDetails: [
       "Add a tech detail here",
       "Add another tech detail here",
@@ -213,10 +218,10 @@ export const EXPERIENCE: Experience[] = [
     company: "Aeronautics and Aerospace Society, SNIoE",
     duration: "Summer 2025 - Present",
     descriptionPoints: [
-      "Leading aerospace-focused projects and initiatives within the society",
-      "Organizing technical workshops and seminars on aerospace engineering",
-      "Coordinating with faculty and industry professionals for student guidance",
-      "Managing team operations and event planning for aerospace competitions",
+      "Lead aerospace-focused technical projects and research initiatives within the society",
+      "Organise workshops and seminars on aerospace engineering topics for student members",
+      "Coordinate between students, faculty, and industry professionals for project guidance",
+      "Manage team operations and logistics for inter-collegiate aerospace competitions",
     ],
   },
   {
@@ -224,10 +229,10 @@ export const EXPERIENCE: Experience[] = [
     company: "American Society of Mechanical Engineers (ASME), SNIoE",
     duration: "Fall 2024 - Present",
     descriptionPoints: [
-      "Secured 3rd place in ASME India IAM3D challenge among national competitors",
-      "Applied innovative mechanical solutions and additive manufacturing knowledge",
-      "Collaborated on design optimization using FEM and CAD tools",
-      "Participated in technical discussions on advanced manufacturing techniques",
+      "Secured 3rd place at the ASME India IAM3D national challenge",
+      "Applied additive manufacturing techniques and mechanical design principles to competition deliverables",
+      "Contributed to design optimisation workflows using FEM analysis and CAD modelling",
+      "Engaged in technical discourse on advanced manufacturing methodologies",
     ],
   },
   {
@@ -235,10 +240,10 @@ export const EXPERIENCE: Experience[] = [
     company: "Atal Tinkering Lab, Birla Vidya Niketan",
     duration: "2023",
     descriptionPoints: [
-      "Engaged in hands-on prototyping and robotics projects",
-      "Worked on electronics assembly and embedded systems",
-      "Developed problem-solving skills through innovation challenges",
-      "Built foundation in hardware-software integration",
+      "Participated in hands-on prototyping and robotics development projects",
+      "Conducted electronics assembly and embedded systems integration",
+      "Applied structured problem-solving approaches to engineering innovation challenges",
+      "Built foundational competencies in hardware-software co-design",
     ],
   },
 ];

@@ -120,9 +120,9 @@ export default function TUI() {
 
   const bootLines = [
     { t: "spacer", v: "" },
-    { t: "success", v: " ╭────────────────────────────────────────────────────────────╮" },
-    { t: "success", v: " │          portfolio.sh v1.0.0  —  interactive mode          │" },
-    { t: "success", v: " ╰────────────────────────────────────────────────────────────╯" },
+    { t: "success", v: " ╭───────────────────────────────────────────────────────────────╮" },
+    { t: "success", v: " │        portfolio.sh v1.0.0  -  interactive mode               │" },
+    { t: "success", v: " ╰───────────────────────────────────────────────────────────────╯" },
     { t: "spacer", v: "" },
     { t: "output", v: `   Hi! I'm ${DATA.name}, and this is my terminal portfolio.` },
     { t: "spacer", v: "" },

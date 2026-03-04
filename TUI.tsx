@@ -11,9 +11,7 @@ const DATA = {
 
 const COMMANDS: Record<string, () => { t: string; v: string }[]> = {
   help: () => [
-    { t: "section-header", v: "╔════════════════════════════════════════════════════════════╗" },
-    { t: "section-header", v: "║                    AVAILABLE COMMANDS                      ║" },
-    { t: "section-header", v: "╚════════════════════════════════════════════════════════════╝" },
+    { t: "section-header", v: "── AVAILABLE COMMANDS ─────────────────────────────" },
     { t: "spacer", v: "" },
     { t: "cyan", v: "  about        →  who am I?" },
     { t: "cyan", v: "  skills       →  my tech stack" },
@@ -30,9 +28,7 @@ const COMMANDS: Record<string, () => { t: string; v: string }[]> = {
   ],
 
   about: () => [
-    { t: "section-header", v: "╔════════════════════════════════════════════════════════════╗" },
-    { t: "section-header", v: "║                        ABOUT ME                          ║" },
-    { t: "section-header", v: "╚════════════════════════════════════════════════════════════╝" },
+    { t: "section-header", v: "── ABOUT ME ───────────────────────────────────────" },
     { t: "spacer", v: "" },
     { t: "output", v: "  Hey! I'm Ojasw Kant — a 2nd-year CS undergrad" },
     { t: "output", v: "  passionate about the intersection of software and hardware." },
@@ -46,19 +42,15 @@ const COMMANDS: Record<string, () => { t: string; v: string }[]> = {
   ],
 
   skills: () => [
-    { t: "section-header", v: "╔════════════════════════════════════════════════════════════╗" },
-    { t: "section-header", v: "║                       SKILLS                            ║" },
-    { t: "section-header", v: "╚════════════════════════════════════════════════════════════╝" },
+    { t: "section-header", v: "── SKILLS ─────────────────────────────────────────" },
     { t: "spacer", v: "" },
     ...SKILLS.map((skill) => ({ t: "cyan", v: `  ▸ ${skill.name}` })),
   ],
 
   experience: () => [
-    { t: "section-header", v: "╔════════════════════════════════════════════════════════════╗" },
-    { t: "section-header", v: "║                     EXPERIENCE                         ║" },
-    { t: "section-header", v: "╚════════════════════════════════════════════════════════════╝" },
+    { t: "section-header", v: "── EXPERIENCE ─────────────────────────────────────" },
     { t: "spacer", v: "" },
-    ...EXPERIENCE.flatMap((exp, i) => [
+    ...EXPERIENCE.flatMap((exp) => [
       { t: "success", v: `  ◆ ${exp.role}` },
       { t: "cyan", v: `    @ ${exp.company}` },
       { t: "dim", v: `    ${exp.duration}` },
@@ -68,9 +60,7 @@ const COMMANDS: Record<string, () => { t: string; v: string }[]> = {
   ],
 
   achievements: () => [
-    { t: "section-header", v: "╔════════════════════════════════════════════════════════════╗" },
-    { t: "section-header", v: "║                    ACHIEVEMENTS                        ║" },
-    { t: "section-header", v: "╚════════════════════════════════════════════════════════════╝" },
+    { t: "section-header", v: "── ACHIEVEMENTS ───────────────────────────────────" },
     { t: "spacer", v: "" },
     ...ACHIEVEMENTS.flatMap((ach) => [
       { t: "success", v: `  ★ ${ach.title}` },
@@ -80,21 +70,17 @@ const COMMANDS: Record<string, () => { t: string; v: string }[]> = {
   ],
 
   interests: () => [
-    { t: "section-header", v: "╔════════════════════════════════════════════════════════════╗" },
-    { t: "section-header", v: "║                     INTERESTS                         ║" },
-    { t: "section-header", v: "╚════════════════════════════════════════════════════════════╝" },
+    { t: "section-header", v: "── INTERESTS ──────────────────────────────────────" },
     { t: "spacer", v: "" },
     ...INTERESTS.map((interest) => ({ t: "output", v: `  ◇ ${interest}` })),
   ],
 
   contact: () => [
-    { t: "section-header", v: "╔══════════════════════════════════════════════════╗" },
-    { t: "section-header", v: "║                    CONTACT                       ║" },
-    { t: "section-header", v: "╚══════════════════════════════════════════════════╝" },
+    { t: "section-header", v: "── CONTACT ────────────────────────────────────────" },
     { t: "spacer", v: "" },
-    { t: "cyan", v: "  ✉  email     →  " + DATA.email },
-    { t: "cyan", v: "  ⌘  github    →  " + DATA.github },
-    { t: "cyan", v: "  🔗  linkedin  →  " + DATA.linkedin },
+    { t: "cyan", v: "  email     →  " + DATA.email },
+    { t: "cyan", v: "  github    →  " + DATA.github },
+    { t: "cyan", v: "  linkedin  →  " + DATA.linkedin },
     { t: "spacer", v: "" },
     { t: "dim", v: "  open to internships & research collabs :)" },
   ],
@@ -120,14 +106,20 @@ export default function TUI() {
 
   const bootLines = [
     { t: "spacer", v: "" },
-    { t: "success", v: " ╭───────────────────────────────────────────────────────────────╮" },
-    { t: "success", v: " │        portfolio.sh v1.0.0  -  interactive mode               │" },
-    { t: "success", v: " ╰───────────────────────────────────────────────────────────────╯" },
+    { t: "success", v: "  ██╗  ██╗███████╗██╗     ██╗      ██████╗ ██╗" },
+    { t: "success", v: "  ██║  ██║██╔════╝██║     ██║     ██╔═══██╗██║" },
+    { t: "success", v: "  ███████║█████╗  ██║     ██║     ██║   ██║██║" },
+    { t: "success", v: "  ██╔══██║██╔══╝  ██║     ██║     ██║   ██║╚═╝" },
+    { t: "success", v: "  ██║  ██║███████╗███████╗███████╗╚██████╔╝██╗" },
+    { t: "success", v: "  ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝ ╚═════╝ ╚═╝" },
     { t: "spacer", v: "" },
-    { t: "output", v: `   Hi! I'm ${DATA.name}, and this is my terminal portfolio.` },
+    { t: "success", v: "  portfolio.sh v1.0.0  —  interactive mode" },
+    { t: "dim",     v: "  ──────────────────────────────────────────" },
     { t: "spacer", v: "" },
-    { t: "cyan", v: "   Type 'help' to see what you can explore." },
-    { t: "dim", v: "   Type 'about', 'skills', 'contact'..." },
+    { t: "output", v: `  I'm ${DATA.name}, and this is my terminal portfolio.` },
+    { t: "spacer", v: "" },
+    { t: "cyan", v: "  Type 'help' to see what you can explore." },
+    { t: "dim", v: "  Type 'about', 'skills', 'contact'..." },
     { t: "spacer", v: "" },
   ];
 

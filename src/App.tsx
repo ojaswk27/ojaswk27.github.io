@@ -151,42 +151,52 @@ const ProjectCard: React.FC<{
         </div>
       </div>
 
-      {hasDetails && isOpen && (
+      {hasDetails && (
         <div
-          className="px-3 pb-3"
-          style={{ borderTop: '1px solid rgba(55, 65, 81, 0.5)' }}
+          style={{
+            display: 'grid',
+            gridTemplateRows: isOpen ? '1fr' : '0fr',
+            transition: 'grid-template-rows 280ms ease',
+          }}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="pt-3 space-y-2">
-            {project.duration && (
-              <div>
-                <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">Timeline</span>
-                <p className="text-xs text-gray-400 mt-0.5">{project.duration}</p>
-              </div>
-            )}
-            {project.role && (
-              <div>
-                <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">My Role</span>
-                <p className="text-xs text-gray-400 mt-0.5">{project.role}</p>
-              </div>
-            )}
-            {project.learnings && project.learnings.length > 0 && (
-              <div>
-                <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">What I Learnt</span>
-                <ul className="text-xs text-gray-400 mt-0.5 ml-3 list-disc space-y-0.5">
-                  {project.learnings.map((item, i) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <Link
-              to={`/${slug}`}
-              onClick={(e) => e.stopPropagation()}
-              className="inline-block text-xs font-semibold text-gray-300 hover:text-white uppercase tracking-wide pt-1"
+          <div style={{ overflow: 'hidden' }}>
+            <div
+              className="px-3 pb-3"
+              style={{ borderTop: '1px solid rgba(55, 65, 81, 0.5)' }}
             >
-              Documentation →
-            </Link>
+              <div className="pt-3 space-y-2">
+                {project.duration && (
+                  <div>
+                    <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">Timeline</span>
+                    <p className="text-xs text-gray-400 mt-0.5">{project.duration}</p>
+                  </div>
+                )}
+                {project.role && (
+                  <div>
+                    <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">My Role</span>
+                    <p className="text-xs text-gray-400 mt-0.5">{project.role}</p>
+                  </div>
+                )}
+                {project.learnings && project.learnings.length > 0 && (
+                  <div>
+                    <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">What I Learnt</span>
+                    <ul className="text-xs text-gray-400 mt-0.5 ml-3 list-disc space-y-0.5">
+                      {project.learnings.map((item, i) => (
+                        <li key={i}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                <Link
+                  to={`/${slug}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-block text-xs font-semibold text-gray-300 hover:text-white uppercase tracking-wide pt-1"
+                >
+                  Documentation →
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       )}

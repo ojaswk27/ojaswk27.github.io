@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import type { Project, Experience, Achievement, Skill } from "./types";
 import { PROJECTS, EXPERIENCE, ACHIEVEMENTS, SKILLS, INTERESTS } from "./constants";
@@ -208,9 +208,28 @@ const ProjectCard: React.FC<{
 
 const ProjectGrid: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [delayedCloseIndex, setDelayedCloseIndex] = useState<number | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleToggle = useCallback((index: number) => {
-    setOpenIndex(prev => prev === index ? null : index);
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+
+    setOpenIndex(prev => {
+      if (prev === index) {
+        // same card — close it immediately
+        return null;
+      }
+      if (prev !== null) {
+        // different card — keep old one open briefly so new opens first
+        setDelayedCloseIndex(prev);
+        closeTimer.current = setTimeout(() => setDelayedCloseIndex(null), 120);
+      }
+      return index;
+    });
+  }, []);
+
+  useEffect(() => {
+    return () => { if (closeTimer.current) clearTimeout(closeTimer.current); };
   }, []);
 
   useEffect(() => {
@@ -230,7 +249,7 @@ const ProjectGrid: React.FC = () => {
         <ProjectCard
           key={index}
           project={project}
-          isOpen={openIndex === index}
+          isOpen={openIndex === index || delayedCloseIndex === index}
           onToggle={() => handleToggle(index)}
         />
       ))}

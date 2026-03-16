@@ -169,16 +169,16 @@ export const PROJECTS: Project[] = [
     techDetails: [
       "LangGraph-based multi-node pipeline: LLM Supervisor → Requirement Parser → Parameter Completer → RAG Search → Formula Extractor → Data Validator → Calculation Agent → Validator → Synthesizer",
       "RAG over 30+ arXiv and NASA papers using ChromaDB with sentence-transformers/all-MiniLM-L6-v2 embeddings, filtered by vehicle type for precision retrieval",
-      "LLM-powered parameter completion fills unspecified inputs (speed, altitude, range) using vehicle-class reasoning — preventing manned-aircraft defaults from being applied to small UAVs",
+      "LLM-powered parameter completion fills unspecified inputs (speed, altitude, range) using vehicle-class reasoning - preventing manned-aircraft defaults from being applied to small UAVs",
       "LLM data validation layer detects and corrects scale mismatches between retrieved research data and the actual design target before calculations are run",
       "Context-aware sub-classification for fixed-wing vehicles (uav_small through transport) selects appropriate MTOW multipliers, drag coefficients, and propulsion models per category",
       "Modular physics-based calculation tools per vehicle type (drones, fixed-wing, helicopters, rockets, satellites, gliders) using real aerospace formulas with unit-aware conversions",
     ],
     images: [],
     duration: "Monsoon 2025",
-    role: "Sole developer — end-to-end implementation including LangGraph architecture, RAG pipeline, LLM integration, calculation tools, and validation layers",
+    role: "Sole developer - end-to-end implementation including LangGraph architecture, RAG pipeline, LLM integration, calculation tools, and validation layers",
     learnings: [
-      "Built a full RAG pipeline from scratch — chunking and embedding research papers, setting up ChromaDB, and tuning retrieval to return domain-relevant results",
+      "Built a full RAG pipeline from scratch - chunking and embedding research papers, setting up ChromaDB, and tuning retrieval to return domain-relevant results",
       "Learnt LangChain and LangGraph for orchestrating multi-step LLM workflows, including state management, node routing, and conditional graph edges",
       "Used LangSmith for tracing and debugging LLM calls across the pipeline, which was invaluable for identifying where hallucinations and scale mismatches were introduced",
     ],
@@ -194,13 +194,13 @@ export const PROJECTS: Project[] = [
       "Deployed and optimised CV inference on the Jetson Orin Nano using industry-standard ONNX runtime with TensorRT execution provider and FP16 precision for real-time edge performance",
       "Trained and benchmarked five YOLO variants (YOLOv8n, YOLOv8s, YOLOv8m, YOLOv9c, YOLOv9e) on a custom SAR dataset, selecting the optimal model based on mAP, latency, and memory footprint on-device",
       "Built a custom multi-object tracker inspired by ByteTrack, retaining low-confidence detections in a secondary association pass to reduce identity switches and track loss in cluttered aerial scenes",
-      "Training dataset compiled by combining HERIDAL — a dedicated aerial human detection dataset — with several smaller domain-specific datasets to improve generalisation across varied terrain and lighting conditions",
+      "Training dataset compiled by combining HERIDAL - a dedicated aerial human detection dataset - with several smaller domain-specific datasets to improve generalisation across varied terrain and lighting conditions",
     ],
     images: [],
     duration: "June 2025 - January 2026",
-    role: "Multirole — CV/AI (model training, inference optimisation, edge deployment), structural design and analysis (CAD, FEM, fabrication), and autonomy design (systems architecture, inter-drone communication)",
+    role: "Multirole - CV/AI (model training, inference optimisation, edge deployment), structural design and analysis (CAD, FEM, fabrication), and autonomy design (systems architecture, inter-drone communication)",
     learnings: [
-      "Gained hands-on experience optimising CV inference for the Jetson Orin Nano — including TensorRT export, precision tuning, and working within the constraints of edge GPU memory and thermal limits",
+      "Gained hands-on experience optimising CV inference for the Jetson Orin Nano - including TensorRT export, precision tuning, and working within the constraints of edge GPU memory and thermal limits",
       "Trained and fine-tuned a computer vision model on a custom-compiled dataset assembled specifically for SAR scenarios",
       "Built a custom multi-object tracking solution from scratch, handling occlusion, re-identification, and trajectory continuity across drone frames",
       "Designed autonomous systems architecture and inter-drone communication using SiK radios, including telemetry relay and coordination protocols",
@@ -218,16 +218,16 @@ export const PROJECTS: Project[] = [
     techDetails: [],
     images: [],
     // TODO: fill in duration
-    duration: "—",
+    duration: "-",
     // TODO: fill in your role (CV model, routing logic, etc.)
-    role: "—",
+    role: "-",
     // TODO: fill in learnings
     learnings: [],
   },
   {
     title: "Hackdata 2026 - Multimodal Video RAG",
     description:
-      "We are building a multimodal retrieval-augmented generation system for video understanding, utilising Qwen3-VL for video-grounded reasoning over time-chunked clips and frames. The media pipeline segments content into 30–60s chunks, generates multimodal embeddings, and indexes them in Chroma/Qdrant, targeting 60–120 fps throughput — up to 100x faster than manual review.",
+      "We are building a multimodal retrieval-augmented generation system for video understanding, utilising Qwen3-VL for video-grounded reasoning over time-chunked clips and frames. The media pipeline segments content into 30–60s chunks, generates multimodal embeddings, and indexes them in Chroma/Qdrant, targeting 60–120 fps throughput - up to 100x faster than manual review.",
     tags: ["VLM", "RAG", "Video Processing", "Python", "Qwen3"],
     slug: "hackdata-2026-video-rag",
     fullDescription: videoRagMd,
@@ -235,9 +235,9 @@ export const PROJECTS: Project[] = [
     techDetails: [],
     images: [],
     // TODO: fill in duration
-    duration: "—",
+    duration: "-",
     // TODO: fill in your specific role (e.g. pipeline, embeddings, etc.)
-    role: "—",
+    role: "-",
     // TODO: fill in learnings
     learnings: [],
   },
@@ -251,14 +251,14 @@ export const PROJECTS: Project[] = [
     techDetails: [
       "Go HTTP server exposes the profiling pipeline API and GitHub webhook integration with JWT auth; Python perf agent handles the full profile-optimise loop as both a CLI tool and library",
       "Linux perf collects hardware-level counters (CPU cycles, cache misses, branch mispredictions, IPC) inside Docker containers built with from-source perf and toolchains for C, C++, Go, Rust, Java, Python, and more",
-      "LLM proposes exactly one optimisation per iteration; the system compiles, re-profiles, and keeps or rolls back the change based on a weighted score — 70% runtime, 20% IPC, 10% cache miss rate",
+      "LLM proposes exactly one optimisation per iteration; the system compiles, re-profiles, and keeps or rolls back the change based on a weighted score - 70% runtime, 20% IPC, 10% cache miss rate",
       "Supports cross-architecture profiling targets: x86_64, arm64, wasm32, and riscv64 via Docker containers",
       "Stops automatically when code reaches within 5% of the CPU's theoretical peak (estimated from max IPC and clock speed), or after three consecutive failed attempts",
       "SvelteKit (Svelte 5) frontend with Supabase for persistence; users can link a GitHub repo or upload source directly and download the optimised result as a ZIP",
     ],
     images: [],
     duration: "March 14 - March 15, 2026",
-    role: "LLM integration — built the LLM-powered optimisation suggestion layer and related infrastructure for interpreting perf output and generating code changes",
+    role: "LLM integration - built the LLM-powered optimisation suggestion layer and related infrastructure for interpreting perf output and generating code changes",
     learnings: [
       "Learnt how to manage and orchestrate multiple Docker containers simultaneously, including resource constraint configuration for simulating edge hardware targets",
       "Understood how to interpret Linux perf hardware counters (cache misses, branch mispredictions, IPC) and translate them into actionable optimisation strategies",
@@ -281,7 +281,7 @@ export const PROJECTS: Project[] = [
     ],
     images: [],
     duration: "March 14 - March 15, 2026",
-    role: "CV & Edge Computing — implemented the computer vision detection pipeline, OpenCV heuristics, and deployment on Raspberry Pi 5",
+    role: "CV & Edge Computing - implemented the computer vision detection pipeline, OpenCV heuristics, and deployment on Raspberry Pi 5",
     learnings: [
       "Reverse engineered the Bambu Lab camera stream protocol to extract frames for real-time inference on the Pi",
       "Learnt how to run ONNX models efficiently on edge hardware and combine model output with hand-tuned OpenCV heuristics for failure modes the base model doesn't cover",
@@ -348,7 +348,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
   {
     title: "3rd Place - Hackdata 2026",
-    event: "Hackdata Hackathon — organised by SNU, funded by HP",
+    event: "Hackdata Hackathon - organised by SNU, funded by HP",
     date: "March 14–15, 2026",
   },
 ];

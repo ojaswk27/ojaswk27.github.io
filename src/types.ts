@@ -9,6 +9,9 @@ export interface Project {
   fullDescription?: string;
   techDetails?: string[];
   images?: string[];
+  duration?: string;
+  role?: string;
+  learnings?: string[];
 }
 
 export interface Experience {

@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 import { PROJECTS } from "./constants";
 
 const ExternalLinkIcon = () => (
@@ -147,9 +148,9 @@ export default function ProjectPage() {
             <h2 className="text-lg font-bold text-white mb-3 uppercase tracking-wide">
               About
             </h2>
-            <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-line">
-              {project.fullDescription}
-            </p>
+            <div className="markdown-content">
+              <ReactMarkdown>{project.fullDescription}</ReactMarkdown>
+            </div>
           </div>
         )}
 

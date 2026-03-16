@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import type { Project, Experience, Achievement, Skill } from "./types";
 import { PROJECTS, EXPERIENCE, ACHIEVEMENTS, SKILLS, INTERESTS } from "./constants";
@@ -17,13 +18,15 @@ function toSlug(title: string): string {
 const GlassCard: React.FC<{
   children: React.ReactNode;
   className?: string;
-}> = ({ children, className = "" }) => (
+  style?: React.CSSProperties;
+}> = ({ children, className = "", style = {} }) => (
   <div
     className={`backdrop-blur-lg border rounded-lg shadow-lg transition-all duration-200 ${className}`}
     style={{
       backgroundColor: 'rgba(20, 20, 20, 0.3)',
       borderColor: 'rgba(80, 80, 80, 0.3)',
       boxShadow: '0 8px 32px rgba(255, 255, 255, 0.02)',
+      ...style,
     }}
     onMouseEnter={(e) => {
       e.currentTarget.style.borderColor = 'rgba(160, 160, 160, 0.5)';
@@ -110,6 +113,142 @@ const ExternalLinkIcon = () => (
 );
 
 // --- ANIMATED WAVE BACKGROUND ---
+
+// --- PROJECT CARD WITH HOVER POPOVER ---
+
+const ProjectCard: React.FC<{
+  project: Project;
+  isOpen: boolean;
+  onHoverStart: () => void;
+  onHoverEnd: () => void;
+}> = ({ project, isOpen, onHoverStart, onHoverEnd }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [rect, setRect] = useState<DOMRect | null>(null);
+  const hasDetails = project.duration || project.role || (project.learnings && project.learnings.length > 0);
+
+  useEffect(() => {
+    if (isOpen && cardRef.current) {
+      setRect(cardRef.current.getBoundingClientRect());
+    }
+  }, [isOpen]);
+
+  const popover = hasDetails && isOpen && rect ? createPortal(
+    <div
+      onMouseEnter={onHoverStart}
+      onMouseLeave={onHoverEnd}
+      style={{
+        position: 'fixed',
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
+        padding: '12px',
+        background: 'rgba(17, 17, 17, 0.95)',
+        border: '1px solid rgba(75, 85, 99, 0.5)',
+        borderRadius: '8px',
+        boxShadow: '0 12px 40px rgba(0, 0, 0, 0.5)',
+        zIndex: 51,
+      }}
+    >
+      {project.duration && (
+        <div className="mb-2">
+          <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">Timeline</span>
+          <p className="text-xs text-gray-400 mt-0.5">{project.duration}</p>
+        </div>
+      )}
+      {project.role && (
+        <div className="mb-2">
+          <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">My Role</span>
+          <p className="text-xs text-gray-400 mt-0.5">{project.role}</p>
+        </div>
+      )}
+      {project.learnings && project.learnings.length > 0 && (
+        <div>
+          <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">What I Learnt</span>
+          <ul className="text-xs text-gray-400 mt-0.5 ml-3 list-disc space-y-0.5">
+            {project.learnings.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>,
+    document.body
+  ) : null;
+
+  return (
+    <div ref={cardRef} className="relative">
+      <Link
+        to={`/${project.slug ?? toSlug(project.title)}`}
+        className="block border rounded p-3 transition-colors"
+        style={{
+          borderColor: isOpen ? 'rgba(107, 114, 128, 0.7)' : 'rgba(55, 65, 81, 0.5)',
+        }}
+        onMouseEnter={onHoverStart}
+        onMouseLeave={onHoverEnd}
+      >
+        <div className="flex justify-between items-start mb-2">
+          <h4 className="text-sm font-bold text-white">{project.title}</h4>
+          {project.link && (
+            <span
+              onClick={(e) => { e.preventDefault(); window.open(project.link, "_blank", "noopener,noreferrer"); }}
+              className="text-gray-400 hover:text-white cursor-pointer"
+            >
+              <ExternalLinkIcon />
+            </span>
+          )}
+        </div>
+        <p className="text-xs text-gray-400 mb-2 line-clamp-2">{project.description}</p>
+        <div className="flex flex-wrap gap-1">
+          {project.tags.slice(0, 4).map((tag) => (
+            <span key={tag} className="bg-gray-700/50 text-gray-400 text-xs px-2 py-0.5 rounded">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </Link>
+      {popover}
+    </div>
+  );
+};
+
+// --- PROJECT GRID (manages which popover is open) ---
+
+const ProjectGrid: React.FC = () => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleHoverStart = useCallback((index: number) => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+    setOpenIndex(index);
+  }, []);
+
+  const handleHoverEnd = useCallback(() => {
+    closeTimer.current = setTimeout(() => setOpenIndex(null), 150);
+  }, []);
+
+  useEffect(() => {
+    return () => { if (closeTimer.current) clearTimeout(closeTimer.current); };
+  }, []);
+
+  return (
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3" style={{ position: 'relative' }}>
+        {PROJECTS.map((project: Project, index: number) => (
+          <ProjectCard
+            key={index}
+            project={project}
+            isOpen={openIndex === index}
+            onHoverStart={() => handleHoverStart(index)}
+            onHoverEnd={handleHoverEnd}
+          />
+        ))}
+      </div>
+    </>
+  );
+};
 
 const WaveBackground = () => (
   <div className="pointer-events-none" style={{ position: 'absolute', top: 0, left: 0, width: '100vw', height: '100vh', overflow: 'hidden' }}>
@@ -419,7 +558,7 @@ function App() {
           </div>
 
           {/* Grid Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:items-start" style={{ position: 'relative', zIndex: 2 }}>
             
             {/* Left Column */}
             <div className="flex flex-col gap-4 lg:h-full">
@@ -427,10 +566,17 @@ function App() {
               {/* Education */}
               <GlassCard className="p-4 flex-shrink-0">
                 <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">Education</h3>
-                <div className="space-y-2">
-                  <p className="text-sm font-semibold text-gray-200">B.Tech in Computer Science</p>
-                  <p className="text-xs text-gray-400">Shiv Nadar Institute of Eminence</p>
-                  <p className="text-xs text-gray-400">2024-2028 • Minor in Mathematics</p>
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <p className="text-sm font-semibold text-gray-200">B.Tech in Computer Science</p>
+                    <p className="text-xs text-gray-400">Shiv Nadar Institute of Eminence</p>
+                    <p className="text-xs text-gray-400">2024–2028 • Minor in Mathematics</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm font-semibold text-gray-200">Senior Secondary (Class XII)</p>
+                    <p className="text-xs text-gray-400">Birla Vidya Niketan</p>
+                    <p className="text-xs text-gray-400">PCM + Computer Science</p>
+                  </div>
                 </div>
               </GlassCard>
 
@@ -488,43 +634,15 @@ function App() {
               </GlassCard>
 
               {/* Projects */}
-              <GlassCard className="p-4 flex-grow">
+              <GlassCard className="p-4 flex-grow" style={{ overflow: 'visible', position: 'relative', zIndex: 10 }}>
                 <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">Projects</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {PROJECTS.map((project: Project, index: number) => (
-                    <Link
-                      key={index}
-                      to={`/${project.slug ?? toSlug(project.title)}`}
-                      className="block border border-gray-700/50 rounded p-3 hover:border-gray-500/70 transition-colors"
-                    >
-                      <div className="flex justify-between items-start mb-2">
-                        <h4 className="text-sm font-bold text-white">{project.title}</h4>
-                        {project.link && (
-                          <span
-                            onClick={(e) => { e.preventDefault(); window.open(project.link, "_blank", "noopener,noreferrer"); }}
-                            className="text-gray-400 hover:text-white cursor-pointer"
-                          >
-                            <ExternalLinkIcon />
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-xs text-gray-400 mb-2 line-clamp-2">{project.description}</p>
-                      <div className="flex flex-wrap gap-1">
-                        {project.tags.slice(0, 4).map((tag) => (
-                          <span key={tag} className="bg-gray-700/50 text-gray-400 text-xs px-2 py-0.5 rounded">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </Link>
-                  ))}
-                </div>
+                <ProjectGrid />
               </GlassCard>
             </div>
           </div>
 
           {/* Interests Section */}
-          <div className="mt-4">
+          <div className="mt-4" style={{ position: 'relative', zIndex: 1 }}>
             <GlassCard className="p-4">
               <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">Interests</h3>
               <p className="text-xs text-gray-300 mb-3 italic">

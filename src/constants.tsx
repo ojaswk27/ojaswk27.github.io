@@ -5,6 +5,8 @@ import aiAerospaceMd from "./projects/ai-aerospace-design-assistant.md?raw";
 import nidarMd from "./projects/nidar-2025.md?raw";
 import cvTrashMd from "./projects/cv-trash-detection.md?raw";
 import videoRagMd from "./projects/hackdata-2026-video-rag.md?raw";
+import hephaestusMd from "./projects/hephaestus.md?raw";
+import printguardMd from "./projects/printguard.md?raw";
 
 // SVG Icons for Skills
 const PythonIcon = () => (
@@ -165,10 +167,21 @@ export const PROJECTS: Project[] = [
     slug: "ai-aerospace-design-assistant",
     fullDescription: aiAerospaceMd,
     techDetails: [
-      "Add a tech detail here",
-      "Add another tech detail here",
+      "LangGraph-based multi-node pipeline: LLM Supervisor → Requirement Parser → Parameter Completer → RAG Search → Formula Extractor → Data Validator → Calculation Agent → Validator → Synthesizer",
+      "RAG over 30+ arXiv and NASA papers using ChromaDB with sentence-transformers/all-MiniLM-L6-v2 embeddings, filtered by vehicle type for precision retrieval",
+      "LLM-powered parameter completion fills unspecified inputs (speed, altitude, range) using vehicle-class reasoning — preventing manned-aircraft defaults from being applied to small UAVs",
+      "LLM data validation layer detects and corrects scale mismatches between retrieved research data and the actual design target before calculations are run",
+      "Context-aware sub-classification for fixed-wing vehicles (uav_small through transport) selects appropriate MTOW multipliers, drag coefficients, and propulsion models per category",
+      "Modular physics-based calculation tools per vehicle type (drones, fixed-wing, helicopters, rockets, satellites, gliders) using real aerospace formulas with unit-aware conversions",
     ],
     images: [],
+    duration: "Monsoon 2025",
+    role: "Sole developer — end-to-end implementation including LangGraph architecture, RAG pipeline, LLM integration, calculation tools, and validation layers",
+    learnings: [
+      "Built a full RAG pipeline from scratch — chunking and embedding research papers, setting up ChromaDB, and tuning retrieval to return domain-relevant results",
+      "Learnt LangChain and LangGraph for orchestrating multi-step LLM workflows, including state management, node routing, and conditional graph edges",
+      "Used LangSmith for tracing and debugging LLM calls across the pipeline, which was invaluable for identifying where hallucinations and scale mismatches were introduced",
+    ],
   },
   {
     title: "NIDAR 2025 - Autonomous Multi-Drone SAR System",
@@ -178,10 +191,20 @@ export const PROJECTS: Project[] = [
     slug: "nidar-2025",
     fullDescription: nidarMd,
     techDetails: [
-      "Add a tech detail here",
-      "Add another tech detail here",
+      "Deployed and optimised CV inference on the Jetson Orin Nano using industry-standard ONNX runtime with TensorRT execution provider and FP16 precision for real-time edge performance",
+      "Trained and benchmarked five YOLO variants (YOLOv8n, YOLOv8s, YOLOv8m, YOLOv9c, YOLOv9e) on a custom SAR dataset, selecting the optimal model based on mAP, latency, and memory footprint on-device",
+      "Built a custom multi-object tracker inspired by ByteTrack, retaining low-confidence detections in a secondary association pass to reduce identity switches and track loss in cluttered aerial scenes",
+      "Training dataset compiled by combining HERIDAL — a dedicated aerial human detection dataset — with several smaller domain-specific datasets to improve generalisation across varied terrain and lighting conditions",
     ],
     images: [],
+    duration: "Month YYYY - Month YYYY",
+    role: "Describe your exact role and nature of work here",
+    learnings: [
+      "Gained hands-on experience optimising CV inference for the Jetson Orin Nano — including TensorRT export, precision tuning, and working within the constraints of edge GPU memory and thermal limits",
+      "Trained and fine-tuned a computer vision model on a custom-compiled dataset assembled specifically for SAR scenarios",
+      "Built a custom multi-object tracking solution from scratch, handling occlusion, re-identification, and trajectory continuity across drone frames",
+      "Designed autonomous systems architecture and inter-drone communication using SiK radios, including telemetry relay and coordination protocols",
+    ],
   },
   {
     title: "Smart S.N.U. Hackathon - CV Trash Detection",
@@ -196,6 +219,12 @@ export const PROJECTS: Project[] = [
       "Add another tech detail here",
     ],
     images: [],
+    duration: "Month YYYY - Month YYYY",
+    role: "Describe your exact role and nature of work here",
+    learnings: [
+      "Add what you learnt here",
+      "Add another learning here",
+    ],
   },
   {
     title: "Hackdata 2026 - Multimodal Video RAG",
@@ -209,6 +238,56 @@ export const PROJECTS: Project[] = [
       "Add another tech detail here",
     ],
     images: [],
+    duration: "Month YYYY - Month YYYY",
+    role: "Describe your exact role and nature of work here",
+    learnings: [
+      "Add what you learnt here",
+      "Add another learning here",
+    ],
+  },
+  {
+    title: "Project: Hephaestus",
+    description: "An iterative, hardware-aware code performance optimiser that uses Linux perf and Docker to push programs toward their theoretical maximum on any target — from Raspberry Pis to cloud VPS instances.",
+    tags: ["Docker", "Linux perf", "Performance Optimization", "Edge Computing", "Python"],
+    link: "https://github.com/manan025/dust-hackdata",
+    slug: "hephaestus",
+    fullDescription: hephaestusMd,
+    techDetails: [
+      "Uses Linux perf to profile code execution at the hardware counter level inside isolated Docker containers",
+      "Iteratively applies optimisations and re-profiles until a theoretical performance ceiling or a user-defined hard limit is reached",
+      "Accepts a target Docker configuration to constrain the optimisation environment — enabling tuning for memory-limited edge devices such as Raspberry Pi or similar SBCs",
+      "Supports multi-target optimisation across cloud VPS and compute instances, making it applicable to both edge and cloud deployment scenarios",
+    ],
+    images: [],
+    duration: "March 14 - March 15, 2026",
+    role: "LLM integration — built the LLM-powered optimisation suggestion layer and related infrastructure for interpreting perf output and generating code changes",
+    learnings: [
+      "Learnt how to manage and orchestrate multiple Docker containers simultaneously, including resource constraint configuration for simulating edge hardware targets",
+      "Understood how to interpret Linux perf hardware counters (cache misses, branch mispredictions, IPC) and translate them into actionable optimisation strategies",
+      "Designed LLM prompts that reason over perf metrics and propose concrete code changes, and built the iterative loop that applies changes, re-profiles, and decides whether to continue or stop",
+    ],
+  },
+  {
+    title: "Project: PrintGuard",
+    description: "A Raspberry Pi 5 monitor for Bambu Lab FDM printers that uses the Obico YOLOv4-tiny ONNX model and OpenCV heuristics to detect print failures in real time, then automatically pauses or stops the printer via local MQTT.",
+    tags: ["Python", "Computer Vision", "ONNX", "YOLOv4", "OpenCV", "Raspberry Pi", "MQTT", "IoT"],
+    link: "https://github.com/ojaswk27/dust2",
+    slug: "printguard",
+    fullDescription: printguardMd,
+    techDetails: [
+      "Runs the Obico (The Spaghetti Detective) YOLOv4-tiny ONNX model for spaghetti and detachment detection, combined with OpenCV heuristics for layer shift (Sobel), bed adhesion loss (variance), and extrusion issues (brightness)",
+      "Captures frames from a Raspberry Pi Camera Module 3 or USB webcam at a configurable FPS, requiring N consecutive positive frames before triggering a printer action to suppress false positives",
+      "Communicates with Bambu Lab printers over local MQTT (port 8883, TLS) using the OpenBambuAPI protocol to issue pause or stop commands",
+      "Configurable via YAML with a gitignored local override file; supports dry-run mode and single-image CLI testing",
+      "Supports fine-tuning custom ONNX weights (YOLOv4-tiny or YOLOv8n) on your own labelled failure frames to extend detection beyond the base Obico model",
+    ],
+    images: [],
+    duration: "March 14 - March 15, 2026",
+    role: "CV & Edge Computing — implemented the computer vision detection pipeline, OpenCV heuristics, and deployment on Raspberry Pi 5",
+    learnings: [
+      "Reverse engineered the Bambu Lab camera stream protocol to extract frames for real-time inference on the Pi",
+      "Learnt how to run ONNX models efficiently on edge hardware and combine model output with hand-tuned OpenCV heuristics for failure modes the base model doesn't cover",
+    ],
   },
 ];
 
@@ -274,6 +353,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 export const SKILLS: Skill[] = [
   { name: "Python", icon: <PythonIcon /> },
   { name: "C/C++", icon: <CppIcon /> },
+  { name: "Rust", icon: <CppIcon /> },
   { name: "Java", icon: <JavaScriptIcon /> },
   { name: "JavaScript / TS", icon: <JavaScriptIcon /> },
   { name: "React", icon: <ReactIcon /> },

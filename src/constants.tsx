@@ -197,8 +197,10 @@ export const PROJECTS: Project[] = [
       "Training dataset compiled by combining HERIDAL — a dedicated aerial human detection dataset — with several smaller domain-specific datasets to improve generalisation across varied terrain and lighting conditions",
     ],
     images: [],
-    duration: "Month YYYY - Month YYYY",
-    role: "Describe your exact role and nature of work here",
+    // TODO: fill in duration (e.g. "Month YYYY - Month YYYY")
+    duration: "—",
+    // TODO: fill in your specific role on the NIDAR team
+    role: "—",
     learnings: [
       "Gained hands-on experience optimising CV inference for the Jetson Orin Nano — including TensorRT export, precision tuning, and working within the constraints of edge GPU memory and thermal limits",
       "Trained and fine-tuned a computer vision model on a custom-compiled dataset assembled specifically for SAR scenarios",
@@ -214,17 +216,15 @@ export const PROJECTS: Project[] = [
     link: "https://github.com/rohitjg13/MORNIS",
     slug: "cv-trash-detection",
     fullDescription: cvTrashMd,
-    techDetails: [
-      "Add a tech detail here",
-      "Add another tech detail here",
-    ],
+    // TODO: fill in tech details for CV Trash Detection
+    techDetails: [],
     images: [],
-    duration: "Month YYYY - Month YYYY",
-    role: "Describe your exact role and nature of work here",
-    learnings: [
-      "Add what you learnt here",
-      "Add another learning here",
-    ],
+    // TODO: fill in duration
+    duration: "—",
+    // TODO: fill in your role (CV model, routing logic, etc.)
+    role: "—",
+    // TODO: fill in learnings
+    learnings: [],
   },
   {
     title: "Hackdata 2026 - Multimodal Video RAG",
@@ -233,17 +233,15 @@ export const PROJECTS: Project[] = [
     tags: ["VLM", "RAG", "Video Processing", "Python", "Qwen3"],
     slug: "hackdata-2026-video-rag",
     fullDescription: videoRagMd,
-    techDetails: [
-      "Add a tech detail here",
-      "Add another tech detail here",
-    ],
+    // TODO: fill in tech details for Hackdata Video RAG
+    techDetails: [],
     images: [],
-    duration: "Month YYYY - Month YYYY",
-    role: "Describe your exact role and nature of work here",
-    learnings: [
-      "Add what you learnt here",
-      "Add another learning here",
-    ],
+    // TODO: fill in duration
+    duration: "—",
+    // TODO: fill in your specific role (e.g. pipeline, embeddings, etc.)
+    role: "—",
+    // TODO: fill in learnings
+    learnings: [],
   },
   {
     title: "Project: Hephaestus",

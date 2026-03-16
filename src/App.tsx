@@ -119,12 +119,12 @@ const ExternalLinkIcon = () => (
 const ProjectCard: React.FC<{
   project: Project;
   isOpen: boolean;
-  onHoverStart: () => void;
-  onHoverEnd: () => void;
-}> = ({ project, isOpen, onHoverStart, onHoverEnd }) => {
+  onToggle: () => void;
+}> = ({ project, isOpen, onToggle }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [rect, setRect] = useState<DOMRect | null>(null);
   const hasDetails = project.duration || project.role || (project.learnings && project.learnings.length > 0);
+  const slug = project.slug ?? toSlug(project.title);
 
   useEffect(() => {
     if (isOpen && cardRef.current) {
@@ -134,8 +134,7 @@ const ProjectCard: React.FC<{
 
   const popover = hasDetails && isOpen && rect ? createPortal(
     <div
-      onMouseEnter={onHoverStart}
-      onMouseLeave={onHoverEnd}
+      data-popover
       style={{
         position: 'fixed',
         top: rect.bottom + 4,
@@ -162,7 +161,7 @@ const ProjectCard: React.FC<{
         </div>
       )}
       {project.learnings && project.learnings.length > 0 && (
-        <div>
+        <div className="mb-3">
           <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">What I Learnt</span>
           <ul className="text-xs text-gray-400 mt-0.5 ml-3 list-disc space-y-0.5">
             {project.learnings.map((item, i) => (
@@ -171,26 +170,30 @@ const ProjectCard: React.FC<{
           </ul>
         </div>
       )}
+      <Link
+        to={`/${slug}`}
+        className="text-xs font-semibold text-gray-300 hover:text-white uppercase tracking-wide"
+      >
+        Documentation →
+      </Link>
     </div>,
     document.body
   ) : null;
 
   return (
     <div ref={cardRef} className="relative">
-      <Link
-        to={`/${project.slug ?? toSlug(project.title)}`}
-        className="block border rounded p-3 transition-colors"
+      <div
+        onClick={onToggle}
+        className="block border rounded p-3 transition-colors cursor-pointer"
         style={{
           borderColor: isOpen ? 'rgba(107, 114, 128, 0.7)' : 'rgba(55, 65, 81, 0.5)',
         }}
-        onMouseEnter={onHoverStart}
-        onMouseLeave={onHoverEnd}
       >
         <div className="flex justify-between items-start mb-2">
           <h4 className="text-sm font-bold text-white">{project.title}</h4>
           {project.link && (
             <span
-              onClick={(e) => { e.preventDefault(); window.open(project.link, "_blank", "noopener,noreferrer"); }}
+              onClick={(e) => { e.stopPropagation(); window.open(project.link, "_blank", "noopener,noreferrer"); }}
               className="text-gray-400 hover:text-white cursor-pointer"
             >
               <ExternalLinkIcon />
@@ -205,7 +208,7 @@ const ProjectCard: React.FC<{
             </span>
           ))}
         </div>
-      </Link>
+      </div>
       {popover}
     </div>
   );
@@ -215,38 +218,35 @@ const ProjectCard: React.FC<{
 
 const ProjectGrid: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleHoverStart = useCallback((index: number) => {
-    if (closeTimer.current) {
-      clearTimeout(closeTimer.current);
-      closeTimer.current = null;
-    }
-    setOpenIndex(index);
-  }, []);
-
-  const handleHoverEnd = useCallback(() => {
-    closeTimer.current = setTimeout(() => setOpenIndex(null), 150);
+  const handleToggle = useCallback((index: number) => {
+    setOpenIndex(prev => prev === index ? null : index);
   }, []);
 
   useEffect(() => {
-    return () => { if (closeTimer.current) clearTimeout(closeTimer.current); };
-  }, []);
+    const handleClickOutside = (e: MouseEvent) => {
+      if (openIndex === null) return;
+      const target = e.target as Node;
+      // close if click is not inside a portal popover
+      if (!(target as Element).closest('[data-popover]')) {
+        setOpenIndex(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [openIndex]);
 
   return (
-    <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3" style={{ position: 'relative' }}>
-        {PROJECTS.map((project: Project, index: number) => (
-          <ProjectCard
-            key={index}
-            project={project}
-            isOpen={openIndex === index}
-            onHoverStart={() => handleHoverStart(index)}
-            onHoverEnd={handleHoverEnd}
-          />
-        ))}
-      </div>
-    </>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3" style={{ position: 'relative' }}>
+      {PROJECTS.map((project: Project, index: number) => (
+        <ProjectCard
+          key={index}
+          project={project}
+          isOpen={openIndex === index}
+          onToggle={() => handleToggle(index)}
+        />
+      ))}
+    </div>
   );
 };
 

@@ -347,6 +347,11 @@ export const ACHIEVEMENTS: Achievement[] = [
     event: "Autonomous Drone Competition",
     date: "2025",
   },
+  {
+    title: "3rd Place - Hackdata 2026",
+    event: "Hackdata Hackathon — organised by SNU, funded by HP",
+    date: "March 14–15, 2026",
+  },
 ];
 
 export const SKILLS: Skill[] = [

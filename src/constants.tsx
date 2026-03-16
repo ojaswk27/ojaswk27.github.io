@@ -197,10 +197,8 @@ export const PROJECTS: Project[] = [
       "Training dataset compiled by combining HERIDAL — a dedicated aerial human detection dataset — with several smaller domain-specific datasets to improve generalisation across varied terrain and lighting conditions",
     ],
     images: [],
-    // TODO: fill in duration (e.g. "Month YYYY - Month YYYY")
-    duration: "—",
-    // TODO: fill in your specific role on the NIDAR team
-    role: "—",
+    duration: "June 2025 - January 2026",
+    role: "Multirole — CV/AI (model training, inference optimisation, edge deployment), structural design and analysis (CAD, FEM, fabrication), and autonomy design (systems architecture, inter-drone communication)",
     learnings: [
       "Gained hands-on experience optimising CV inference for the Jetson Orin Nano — including TensorRT export, precision tuning, and working within the constraints of edge GPU memory and thermal limits",
       "Trained and fine-tuned a computer vision model on a custom-compiled dataset assembled specifically for SAR scenarios",

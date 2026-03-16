@@ -8,12 +8,12 @@ Captures frames from a Pi camera module (or USB webcam), runs the [Obico (The Sp
 
 ## Detected failure modes
 
-- **Spaghetti / print detachment** — Obico ONNX model
-- **Stringing / blobs** — Obico + edge-density heuristic
-- **Layer shift** — OpenCV Sobel heuristic
-- **Bed adhesion loss** — OpenCV variance heuristic
-- **Under-extrusion** — OpenCV brightness heuristic
-- **Over-extrusion** — OpenCV brightness heuristic
+- **Spaghetti / print detachment** - Obico ONNX model
+- **Stringing / blobs** - Obico + edge-density heuristic
+- **Layer shift** - OpenCV Sobel heuristic
+- **Bed adhesion loss** - OpenCV variance heuristic
+- **Under-extrusion** - OpenCV brightness heuristic
+- **Over-extrusion** - OpenCV brightness heuristic
 
 You can train your own weights on top of the Obico base (see **Custom weights** below).
 
@@ -61,12 +61,12 @@ systemctl --user start printguard
 
 All settings live in `config.yaml` (defaults) and `config.local.yaml` (your overrides). `config.local.yaml` wins for any key it defines and is `.gitignore`d.
 
-- **`bambu.on_failure`** (default: `pause`) — `pause` or `stop` when failure detected
-- **`camera.backend`** (default: `picamera2`) — `picamera2` or `usb`
-- **`camera.fps`** (default: `2`) — frames per second to analyse
-- **`model.confidence_threshold`** (default: `0.3`) — minimum confidence to record a detection
-- **`model.confirm_frames`** (default: `3`) — consecutive positive frames before acting
-- **`notifications.webhook_enabled`** (default: `false`) — POST JSON payload to a URL on failure
+- **`bambu.on_failure`** (default: `pause`) - `pause` or `stop` when failure detected
+- **`camera.backend`** (default: `picamera2`) - `picamera2` or `usb`
+- **`camera.fps`** (default: `2`) - frames per second to analyse
+- **`model.confidence_threshold`** (default: `0.3`) - minimum confidence to record a detection
+- **`model.confirm_frames`** (default: `3`) - consecutive positive frames before acting
+- **`notifications.webhook_enabled`** (default: `false`) - POST JSON payload to a URL on failure
 
 ---
 

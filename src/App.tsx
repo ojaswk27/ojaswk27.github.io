@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { createPortal } from "react-dom";
+import React, { useState, useEffect, useCallback } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import type { Project, Experience, Achievement, Skill } from "./types";
 import { PROJECTS, EXPERIENCE, ACHIEVEMENTS, SKILLS, INTERESTS } from "./constants";
@@ -121,74 +120,16 @@ const ProjectCard: React.FC<{
   isOpen: boolean;
   onToggle: () => void;
 }> = ({ project, isOpen, onToggle }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [rect, setRect] = useState<DOMRect | null>(null);
   const hasDetails = project.duration || project.role || (project.learnings && project.learnings.length > 0);
   const slug = project.slug ?? toSlug(project.title);
 
-  useEffect(() => {
-    if (isOpen && cardRef.current) {
-      setRect(cardRef.current.getBoundingClientRect());
-    }
-  }, [isOpen]);
-
-  const popover = hasDetails && isOpen && rect ? createPortal(
-    <div
-      data-popover
-      style={{
-        position: 'fixed',
-        top: rect.bottom + 4,
-        left: rect.left,
-        width: rect.width,
-        padding: '12px',
-        background: 'rgba(17, 17, 17, 0.95)',
-        border: '1px solid rgba(75, 85, 99, 0.5)',
-        borderRadius: '8px',
-        boxShadow: '0 12px 40px rgba(0, 0, 0, 0.5)',
-        zIndex: 51,
-      }}
-    >
-      {project.duration && (
-        <div className="mb-2">
-          <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">Timeline</span>
-          <p className="text-xs text-gray-400 mt-0.5">{project.duration}</p>
-        </div>
-      )}
-      {project.role && (
-        <div className="mb-2">
-          <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">My Role</span>
-          <p className="text-xs text-gray-400 mt-0.5">{project.role}</p>
-        </div>
-      )}
-      {project.learnings && project.learnings.length > 0 && (
-        <div className="mb-3">
-          <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">What I Learnt</span>
-          <ul className="text-xs text-gray-400 mt-0.5 ml-3 list-disc space-y-0.5">
-            {project.learnings.map((item, i) => (
-              <li key={i}>{item}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-      <Link
-        to={`/${slug}`}
-        className="text-xs font-semibold text-gray-300 hover:text-white uppercase tracking-wide"
-      >
-        Documentation →
-      </Link>
-    </div>,
-    document.body
-  ) : null;
-
   return (
-    <div ref={cardRef} className="relative">
-      <div
-        onClick={onToggle}
-        className="block border rounded p-3 transition-colors cursor-pointer"
-        style={{
-          borderColor: isOpen ? 'rgba(107, 114, 128, 0.7)' : 'rgba(55, 65, 81, 0.5)',
-        }}
-      >
+    <div
+      className="project-card border rounded transition-colors cursor-pointer"
+      style={{ borderColor: isOpen ? 'rgba(107, 114, 128, 0.7)' : 'rgba(55, 65, 81, 0.5)' }}
+      onClick={onToggle}
+    >
+      <div className="p-3">
         <div className="flex justify-between items-start mb-2">
           <h4 className="text-sm font-bold text-white">{project.title}</h4>
           {project.link && (
@@ -209,7 +150,46 @@ const ProjectCard: React.FC<{
           ))}
         </div>
       </div>
-      {popover}
+
+      {hasDetails && isOpen && (
+        <div
+          className="px-3 pb-3"
+          style={{ borderTop: '1px solid rgba(55, 65, 81, 0.5)' }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="pt-3 space-y-2">
+            {project.duration && (
+              <div>
+                <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">Timeline</span>
+                <p className="text-xs text-gray-400 mt-0.5">{project.duration}</p>
+              </div>
+            )}
+            {project.role && (
+              <div>
+                <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">My Role</span>
+                <p className="text-xs text-gray-400 mt-0.5">{project.role}</p>
+              </div>
+            )}
+            {project.learnings && project.learnings.length > 0 && (
+              <div>
+                <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">What I Learnt</span>
+                <ul className="text-xs text-gray-400 mt-0.5 ml-3 list-disc space-y-0.5">
+                  {project.learnings.map((item, i) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <Link
+              to={`/${slug}`}
+              onClick={(e) => e.stopPropagation()}
+              className="inline-block text-xs font-semibold text-gray-300 hover:text-white uppercase tracking-wide pt-1"
+            >
+              Documentation →
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -226,9 +206,7 @@ const ProjectGrid: React.FC = () => {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (openIndex === null) return;
-      const target = e.target as Node;
-      // close if click is not inside a portal popover
-      if (!(target as Element).closest('[data-popover]')) {
+      if (!(e.target as Element).closest('.project-card')) {
         setOpenIndex(null);
       }
     };

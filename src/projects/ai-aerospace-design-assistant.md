@@ -22,7 +22,7 @@ It uses **LangGraph** to manage the whole process: first classifying the vehicle
 - **LangGraph**: Directed graph with nodes for each design stage and routing logic for different vehicle types
 
 ### Calculation Tools
-Modular, physics-based tools per vehicle type — drones, fixed-wing, helicopters, rockets, satellites, gliders — all using real aerospace formulas with unit-aware calculations.
+Modular, physics-based tools per vehicle type - drones, fixed-wing, helicopters, rockets, satellites, gliders - all using real aerospace formulas with unit-aware calculations.
 
 ---
 
@@ -45,7 +45,7 @@ User Input → LLM Supervisor (classify vehicle, extract requirements)
 ## Key Engineering Challenges Solved
 
 ### Intelligent Parameter Completion
-Users rarely specify all required parameters. Using hardcoded defaults (e.g. 200 km/h for all aircraft) led to absurd designs — a 4 kg drone sizing at 2000 kg MTOW because it used manned aircraft defaults. The LLM now reasons about vehicle type and scale to fill missing parameters appropriately.
+Users rarely specify all required parameters. Using hardcoded defaults (e.g. 200 km/h for all aircraft) led to absurd designs - a 4 kg drone sizing at 2000 kg MTOW because it used manned aircraft defaults. The LLM now reasons about vehicle type and scale to fill missing parameters appropriately.
 
 ### LLM Data Validation Layer
 The RAG system retrieved formulas from papers about manned aircraft and applied them to small drones without scale adjustments. A validation layer now reviews all retrieved data in context of the actual design requirements, detects scale mismatches, and corrects them with reasoning.
@@ -87,8 +87,8 @@ Design Result:
 
 ## Conclusion
 
-The key achievement is building an intelligent agent that doesn't just retrieve information but *reasons* about it — understanding scale, context, and engineering relationships to generate appropriate designs.
+The key achievement is building an intelligent agent that doesn't just retrieve information but *reasons* about it - understanding scale, context, and engineering relationships to generate appropriate designs.
 
-The most challenging aspect was handling the "impedance mismatch" between research literature (often focused on large aircraft) and user requests (often for small UAVs). The solution — multiple LLM reasoning layers — showcases how modern language models can act as intelligent mediators that understand both domain knowledge and practical constraints.
+The most challenging aspect was handling the "impedance mismatch" between research literature (often focused on large aircraft) and user requests (often for small UAVs). The solution - multiple LLM reasoning layers - showcases how modern language models can act as intelligent mediators that understand both domain knowledge and practical constraints.
 
-**Key Takeaway**: LLMs excel not just at information retrieval but at *intelligent adaptation* — taking knowledge from one context and appropriately applying it to another through reasoning, not just pattern matching.
+**Key Takeaway**: LLMs excel not just at information retrieval but at *intelligent adaptation* - taking knowledge from one context and appropriately applying it to another through reasoning, not just pattern matching.

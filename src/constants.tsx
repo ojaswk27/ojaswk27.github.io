@@ -246,11 +246,12 @@ export const PROJECTS: Project[] = [
   {
     title: "Project: Hephaestus",
     description: "An iterative, hardware-aware code performance optimiser that uses Linux perf and Docker to push programs toward their theoretical maximum on any target — from Raspberry Pis to cloud VPS instances.",
-    tags: ["Docker", "Linux perf", "Performance Optimization", "Edge Computing", "Python"],
+    tags: ["Go", "Docker", "Linux perf", "Performance Optimization", "Edge Computing", "Python"],
     link: "https://github.com/manan025/dust-hackdata",
     slug: "hephaestus",
     fullDescription: hephaestusMd,
     techDetails: [
+      "Backend written in Go, handling container orchestration, perf data collection, and the iterative optimisation control loop",
       "Uses Linux perf to profile code execution at the hardware counter level inside isolated Docker containers",
       "Iteratively applies optimisations and re-profiles until a theoretical performance ceiling or a user-defined hard limit is reached",
       "Accepts a target Docker configuration to constrain the optimisation environment — enabling tuning for memory-limited edge devices such as Raspberry Pi or similar SBCs",

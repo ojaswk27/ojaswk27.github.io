@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import type { Project, Experience, Achievement, Skill } from "./types";
-import { PROJECTS, EXPERIENCE, ACHIEVEMENTS, SKILLS, INTERESTS } from "./constants";
+import {
+  PROJECTS,
+  EXPERIENCE,
+  ACHIEVEMENTS,
+  SKILLS,
+  INTERESTS,
+} from "./constants";
 import ProjectPage from "./ProjectPage";
 import TUI from "./TUI";
 
@@ -22,18 +28,18 @@ const GlassCard: React.FC<{
   <div
     className={`backdrop-blur-lg border rounded-lg shadow-lg transition-all duration-200 ${className}`}
     style={{
-      backgroundColor: 'rgba(20, 20, 20, 0.3)',
-      borderColor: 'rgba(80, 80, 80, 0.3)',
-      boxShadow: '0 8px 32px rgba(255, 255, 255, 0.02)',
+      backgroundColor: "rgba(20, 20, 20, 0.3)",
+      borderColor: "rgba(80, 80, 80, 0.3)",
+      boxShadow: "0 8px 32px rgba(255, 255, 255, 0.02)",
       ...style,
     }}
     onMouseEnter={(e) => {
-      e.currentTarget.style.borderColor = 'rgba(160, 160, 160, 0.5)';
-      e.currentTarget.style.boxShadow = '0 8px 32px rgba(180, 180, 180, 0.1)';
+      e.currentTarget.style.borderColor = "rgba(160, 160, 160, 0.5)";
+      e.currentTarget.style.boxShadow = "0 8px 32px rgba(180, 180, 180, 0.1)";
     }}
     onMouseLeave={(e) => {
-      e.currentTarget.style.borderColor = 'rgba(80, 80, 80, 0.3)';
-      e.currentTarget.style.boxShadow = '0 8px 32px rgba(255, 255, 255, 0.02)';
+      e.currentTarget.style.borderColor = "rgba(80, 80, 80, 0.3)";
+      e.currentTarget.style.boxShadow = "0 8px 32px rgba(255, 255, 255, 0.02)";
     }}
   >
     {children}
@@ -120,31 +126,61 @@ const ProjectCard: React.FC<{
   isOpen: boolean;
   onToggle: () => void;
 }> = ({ project, isOpen, onToggle }) => {
-  const hasDetails = project.duration || project.role || (project.learnings && project.learnings.length > 0);
+  const hasDetails =
+    project.duration ||
+    project.role ||
+    (project.learnings && project.learnings.length > 0);
   const slug = project.slug ?? toSlug(project.title);
 
   return (
     <div
       className="project-card border rounded transition-colors cursor-pointer"
-      style={{ borderColor: isOpen ? 'rgba(107, 114, 128, 0.7)' : 'rgba(55, 65, 81, 0.5)' }}
+      style={{
+        borderColor: isOpen
+          ? "rgba(107, 114, 128, 0.7)"
+          : "rgba(55, 65, 81, 0.5)",
+      }}
       onClick={onToggle}
     >
       <div className="p-3">
         <div className="flex justify-between items-start mb-2">
           <h4 className="text-sm font-bold text-white">{project.title}</h4>
-          {project.link && (
-            <span
-              onClick={(e) => { e.stopPropagation(); window.open(project.link, "_blank", "noopener,noreferrer"); }}
-              className="text-gray-400 hover:text-white cursor-pointer"
-            >
-              <ExternalLinkIcon />
-            </span>
-          )}
+          <div className="flex gap-2">
+            {project.link && (
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open(project.link, "_blank", "noopener,noreferrer");
+                }}
+                className="text-gray-400 hover:text-white cursor-pointer"
+                title="Main Repository"
+              >
+                <ExternalLinkIcon />
+              </span>
+            )}
+            {project.cliLink && (
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open(project.cliLink, "_blank", "noopener,noreferrer");
+                }}
+                className="text-gray-400 hover:text-white cursor-pointer"
+                title="CLI Version"
+              >
+                <ExternalLinkIcon />
+              </span>
+            )}
+          </div>
         </div>
-        <p className="text-xs text-gray-400 mb-2 line-clamp-2">{project.description}</p>
+        <p className="text-xs text-gray-400 mb-2 line-clamp-2">
+          {project.description}
+        </p>
         <div className="flex flex-wrap gap-1">
           {project.tags.slice(0, 4).map((tag) => (
-            <span key={tag} className="bg-gray-700/50 text-gray-400 text-xs px-2 py-0.5 rounded">
+            <span
+              key={tag}
+              className="bg-gray-700/50 text-gray-400 text-xs px-2 py-0.5 rounded"
+            >
               {tag}
             </span>
           ))}
@@ -154,33 +190,43 @@ const ProjectCard: React.FC<{
       {hasDetails && (
         <div
           style={{
-            display: 'grid',
-            gridTemplateRows: isOpen ? '1fr' : '0fr',
-            transition: 'grid-template-rows 280ms ease',
+            display: "grid",
+            gridTemplateRows: isOpen ? "1fr" : "0fr",
+            transition: "grid-template-rows 280ms ease",
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <div style={{ overflow: 'hidden' }}>
+          <div style={{ overflow: "hidden" }}>
             <div
               className="px-3 pb-3"
-              style={{ borderTop: '1px solid rgba(55, 65, 81, 0.5)' }}
+              style={{ borderTop: "1px solid rgba(55, 65, 81, 0.5)" }}
             >
               <div className="pt-3 space-y-2">
                 {project.duration && (
                   <div>
-                    <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">Timeline</span>
-                    <p className="text-xs text-gray-400 mt-0.5">{project.duration}</p>
+                    <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">
+                      Timeline
+                    </span>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      {project.duration}
+                    </p>
                   </div>
                 )}
                 {project.role && (
                   <div>
-                    <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">My Role</span>
-                    <p className="text-xs text-gray-400 mt-0.5">{project.role}</p>
+                    <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">
+                      My Role
+                    </span>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      {project.role}
+                    </p>
                   </div>
                 )}
                 {project.learnings && project.learnings.length > 0 && (
                   <div>
-                    <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">What I Learnt</span>
+                    <span className="text-xs font-semibold text-gray-300 uppercase tracking-wide">
+                      What I Learnt
+                    </span>
                     <ul className="text-xs text-gray-400 mt-0.5 ml-3 list-disc space-y-0.5">
                       {project.learnings.map((item, i) => (
                         <li key={i}>{item}</li>
@@ -208,13 +254,15 @@ const ProjectCard: React.FC<{
 
 const ProjectGrid: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const [delayedCloseIndex, setDelayedCloseIndex] = useState<number | null>(null);
+  const [delayedCloseIndex, setDelayedCloseIndex] = useState<number | null>(
+    null,
+  );
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleToggle = useCallback((index: number) => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
 
-    setOpenIndex(prev => {
+    setOpenIndex((prev) => {
       if (prev === index) {
         // same card — close it immediately
         return null;
@@ -229,22 +277,27 @@ const ProjectGrid: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    return () => { if (closeTimer.current) clearTimeout(closeTimer.current); };
+    return () => {
+      if (closeTimer.current) clearTimeout(closeTimer.current);
+    };
   }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (openIndex === null) return;
-      if (!(e.target as Element).closest('.project-card')) {
+      if (!(e.target as Element).closest(".project-card")) {
         setOpenIndex(null);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [openIndex]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3" style={{ position: 'relative' }}>
+    <div
+      className="grid grid-cols-1 md:grid-cols-2 gap-3"
+      style={{ position: "relative" }}
+    >
       {PROJECTS.map((project: Project, index: number) => (
         <ProjectCard
           key={index}
@@ -258,69 +311,202 @@ const ProjectGrid: React.FC = () => {
 };
 
 const WaveBackground = () => (
-  <div className="pointer-events-none" style={{ position: 'absolute', top: 0, left: 0, width: '100vw', height: '100vh', overflow: 'hidden' }}>
-    <svg 
+  <div
+    className="pointer-events-none"
+    style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      overflow: "hidden",
+    }}
+  >
+    <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1920 1080"
       preserveAspectRatio="xMidYMid slice"
-      style={{ 
-        position: 'absolute',
+      style={{
+        position: "absolute",
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
-        minWidth: '100vw'
+        width: "100%",
+        height: "100%",
+        minWidth: "100vw",
       }}
     >
       <defs>
         {/* Pure Monochrome Black/White/Gray Gradients - No Color */}
-        <linearGradient id="wave-gradient-1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#505050', stopOpacity: 0.12 }} />
-          <stop offset="100%" style={{ stopColor: '#303030', stopOpacity: 0.06 }} />
+        <linearGradient
+          id="wave-gradient-1"
+          x1="0%"
+          y1="0%"
+          x2="100%"
+          y2="100%"
+        >
+          <stop
+            offset="0%"
+            style={{ stopColor: "#505050", stopOpacity: 0.12 }}
+          />
+          <stop
+            offset="100%"
+            style={{ stopColor: "#303030", stopOpacity: 0.06 }}
+          />
         </linearGradient>
-        <linearGradient id="wave-gradient-2" x1="100%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#404040', stopOpacity: 0.1 }} />
-          <stop offset="100%" style={{ stopColor: '#202020', stopOpacity: 0.05 }} />
+        <linearGradient
+          id="wave-gradient-2"
+          x1="100%"
+          y1="0%"
+          x2="0%"
+          y2="100%"
+        >
+          <stop
+            offset="0%"
+            style={{ stopColor: "#404040", stopOpacity: 0.1 }}
+          />
+          <stop
+            offset="100%"
+            style={{ stopColor: "#202020", stopOpacity: 0.05 }}
+          />
         </linearGradient>
-        <linearGradient id="wave-gradient-3" x1="50%" y1="0%" x2="50%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#808080', stopOpacity: 0.08 }} />
-          <stop offset="100%" style={{ stopColor: '#606060', stopOpacity: 0.04 }} />
+        <linearGradient
+          id="wave-gradient-3"
+          x1="50%"
+          y1="0%"
+          x2="50%"
+          y2="100%"
+        >
+          <stop
+            offset="0%"
+            style={{ stopColor: "#808080", stopOpacity: 0.08 }}
+          />
+          <stop
+            offset="100%"
+            style={{ stopColor: "#606060", stopOpacity: 0.04 }}
+          />
         </linearGradient>
-        <linearGradient id="wave-gradient-4" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" style={{ stopColor: '#a0a0a0', stopOpacity: 0.06 }} />
-          <stop offset="100%" style={{ stopColor: '#707070', stopOpacity: 0.03 }} />
+        <linearGradient
+          id="wave-gradient-4"
+          x1="0%"
+          y1="100%"
+          x2="100%"
+          y2="0%"
+        >
+          <stop
+            offset="0%"
+            style={{ stopColor: "#a0a0a0", stopOpacity: 0.06 }}
+          />
+          <stop
+            offset="100%"
+            style={{ stopColor: "#707070", stopOpacity: 0.03 }}
+          />
         </linearGradient>
-        <linearGradient id="wave-gradient-5" x1="100%" y1="100%" x2="0%" y2="0%">
-          <stop offset="0%" style={{ stopColor: '#404040', stopOpacity: 0.08 }} />
-          <stop offset="100%" style={{ stopColor: '#505050', stopOpacity: 0.03 }} />
+        <linearGradient
+          id="wave-gradient-5"
+          x1="100%"
+          y1="100%"
+          x2="0%"
+          y2="0%"
+        >
+          <stop
+            offset="0%"
+            style={{ stopColor: "#404040", stopOpacity: 0.08 }}
+          />
+          <stop
+            offset="100%"
+            style={{ stopColor: "#505050", stopOpacity: 0.03 }}
+          />
         </linearGradient>
-        <linearGradient id="wave-gradient-6" x1="25%" y1="0%" x2="75%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#1a1a1a', stopOpacity: 0.1 }} />
-          <stop offset="100%" style={{ stopColor: '#2a2a2a', stopOpacity: 0.04 }} />
+        <linearGradient
+          id="wave-gradient-6"
+          x1="25%"
+          y1="0%"
+          x2="75%"
+          y2="100%"
+        >
+          <stop
+            offset="0%"
+            style={{ stopColor: "#1a1a1a", stopOpacity: 0.1 }}
+          />
+          <stop
+            offset="100%"
+            style={{ stopColor: "#2a2a2a", stopOpacity: 0.04 }}
+          />
         </linearGradient>
-        <linearGradient id="wave-gradient-7" x1="75%" y1="0%" x2="25%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#606060', stopOpacity: 0.07 }} />
-          <stop offset="100%" style={{ stopColor: '#404040', stopOpacity: 0.03 }} />
+        <linearGradient
+          id="wave-gradient-7"
+          x1="75%"
+          y1="0%"
+          x2="25%"
+          y2="100%"
+        >
+          <stop
+            offset="0%"
+            style={{ stopColor: "#606060", stopOpacity: 0.07 }}
+          />
+          <stop
+            offset="100%"
+            style={{ stopColor: "#404040", stopOpacity: 0.03 }}
+          />
         </linearGradient>
-        <linearGradient id="wave-gradient-8" x1="0%" y1="50%" x2="100%" y2="50%">
-          <stop offset="0%" style={{ stopColor: '#909090', stopOpacity: 0.05 }} />
-          <stop offset="100%" style={{ stopColor: '#b0b0b0', stopOpacity: 0.02 }} />
+        <linearGradient
+          id="wave-gradient-8"
+          x1="0%"
+          y1="50%"
+          x2="100%"
+          y2="50%"
+        >
+          <stop
+            offset="0%"
+            style={{ stopColor: "#909090", stopOpacity: 0.05 }}
+          />
+          <stop
+            offset="100%"
+            style={{ stopColor: "#b0b0b0", stopOpacity: 0.02 }}
+          />
         </linearGradient>
-        <linearGradient id="wave-gradient-9" x1="100%" y1="50%" x2="0%" y2="50%">
-          <stop offset="0%" style={{ stopColor: '#2a2a2a', stopOpacity: 0.08 }} />
-          <stop offset="100%" style={{ stopColor: '#404040', stopOpacity: 0.03 }} />
+        <linearGradient
+          id="wave-gradient-9"
+          x1="100%"
+          y1="50%"
+          x2="0%"
+          y2="50%"
+        >
+          <stop
+            offset="0%"
+            style={{ stopColor: "#2a2a2a", stopOpacity: 0.08 }}
+          />
+          <stop
+            offset="100%"
+            style={{ stopColor: "#404040", stopOpacity: 0.03 }}
+          />
         </linearGradient>
-        <linearGradient id="wave-gradient-10" x1="50%" y1="100%" x2="50%" y2="0%">
-          <stop offset="0%" style={{ stopColor: '#505050', stopOpacity: 0.06 }} />
-          <stop offset="100%" style={{ stopColor: '#808080', stopOpacity: 0.02 }} />
+        <linearGradient
+          id="wave-gradient-10"
+          x1="50%"
+          y1="100%"
+          x2="50%"
+          y2="0%"
+        >
+          <stop
+            offset="0%"
+            style={{ stopColor: "#505050", stopOpacity: 0.06 }}
+          />
+          <stop
+            offset="100%"
+            style={{ stopColor: "#808080", stopOpacity: 0.02 }}
+          />
         </linearGradient>
       </defs>
-      
+
       {/* Wave 1 - Top layer */}
-      <path fill="url(#wave-gradient-1)" d="M0,100 Q480,0 960,100 T1920,100 V0 H0 Z">
-        <animate 
-          attributeName="d" 
-          dur="80s" 
+      <path
+        fill="url(#wave-gradient-1)"
+        d="M0,100 Q480,0 960,100 T1920,100 V0 H0 Z"
+      >
+        <animate
+          attributeName="d"
+          dur="80s"
           repeatCount="indefinite"
           values="
             M0,100 Q480,0 960,100 T1920,100 V0 H0 Z;
@@ -328,12 +514,15 @@ const WaveBackground = () => (
             M0,100 Q480,0 960,100 T1920,100 V0 H0 Z"
         />
       </path>
-      
+
       {/* Wave 2 */}
-      <path fill="url(#wave-gradient-2)" d="M0,150 Q640,40 1280,150 T2560,150 V0 H0 Z">
-        <animate 
-          attributeName="d" 
-          dur="100s" 
+      <path
+        fill="url(#wave-gradient-2)"
+        d="M0,150 Q640,40 1280,150 T2560,150 V0 H0 Z"
+      >
+        <animate
+          attributeName="d"
+          dur="100s"
           repeatCount="indefinite"
           values="
             M0,150 Q640,40 1280,150 T2560,150 V0 H0 Z;
@@ -343,10 +532,13 @@ const WaveBackground = () => (
       </path>
 
       {/* Wave 3 */}
-      <path fill="url(#wave-gradient-3)" d="M0,210 Q800,80 1600,210 T3200,210 V0 H0 Z">
-        <animate 
-          attributeName="d" 
-          dur="120s" 
+      <path
+        fill="url(#wave-gradient-3)"
+        d="M0,210 Q800,80 1600,210 T3200,210 V0 H0 Z"
+      >
+        <animate
+          attributeName="d"
+          dur="120s"
           repeatCount="indefinite"
           values="
             M0,210 Q800,80 1600,210 T3200,210 V0 H0 Z;
@@ -356,10 +548,13 @@ const WaveBackground = () => (
       </path>
 
       {/* Wave 4 */}
-      <path fill="url(#wave-gradient-4)" d="M0,280 Q960,130 1920,280 T3840,280 V0 H0 Z">
-        <animate 
-          attributeName="d" 
-          dur="140s" 
+      <path
+        fill="url(#wave-gradient-4)"
+        d="M0,280 Q960,130 1920,280 T3840,280 V0 H0 Z"
+      >
+        <animate
+          attributeName="d"
+          dur="140s"
           repeatCount="indefinite"
           values="
             M0,280 Q960,130 1920,280 T3840,280 V0 H0 Z;
@@ -369,10 +564,13 @@ const WaveBackground = () => (
       </path>
 
       {/* Wave 5 */}
-      <path fill="url(#wave-gradient-5)" d="M0,360 Q1120,200 2240,360 T4480,360 V0 H0 Z">
-        <animate 
-          attributeName="d" 
-          dur="160s" 
+      <path
+        fill="url(#wave-gradient-5)"
+        d="M0,360 Q1120,200 2240,360 T4480,360 V0 H0 Z"
+      >
+        <animate
+          attributeName="d"
+          dur="160s"
           repeatCount="indefinite"
           values="
             M0,360 Q1120,200 2240,360 T4480,360 V0 H0 Z;
@@ -382,10 +580,13 @@ const WaveBackground = () => (
       </path>
 
       {/* Wave 6 - Bottom waves start */}
-      <path fill="url(#wave-gradient-6)" d="M0,720 Q1120,560 2240,720 T4480,720 V1080 H0 Z">
-        <animate 
-          attributeName="d" 
-          dur="150s" 
+      <path
+        fill="url(#wave-gradient-6)"
+        d="M0,720 Q1120,560 2240,720 T4480,720 V1080 H0 Z"
+      >
+        <animate
+          attributeName="d"
+          dur="150s"
           repeatCount="indefinite"
           values="
             M0,720 Q1120,560 2240,720 T4480,720 V1080 H0 Z;
@@ -395,10 +596,13 @@ const WaveBackground = () => (
       </path>
 
       {/* Wave 7 */}
-      <path fill="url(#wave-gradient-7)" d="M0,800 Q960,650 1920,800 T3840,800 V1080 H0 Z">
-        <animate 
-          attributeName="d" 
-          dur="130s" 
+      <path
+        fill="url(#wave-gradient-7)"
+        d="M0,800 Q960,650 1920,800 T3840,800 V1080 H0 Z"
+      >
+        <animate
+          attributeName="d"
+          dur="130s"
           repeatCount="indefinite"
           values="
             M0,800 Q960,650 1920,800 T3840,800 V1080 H0 Z;
@@ -408,10 +612,13 @@ const WaveBackground = () => (
       </path>
 
       {/* Wave 8 */}
-      <path fill="url(#wave-gradient-8)" d="M0,870 Q800,720 1600,870 T3200,870 V1080 H0 Z">
-        <animate 
-          attributeName="d" 
-          dur="110s" 
+      <path
+        fill="url(#wave-gradient-8)"
+        d="M0,870 Q800,720 1600,870 T3200,870 V1080 H0 Z"
+      >
+        <animate
+          attributeName="d"
+          dur="110s"
           repeatCount="indefinite"
           values="
             M0,870 Q800,720 1600,870 T3200,870 V1080 H0 Z;
@@ -421,10 +628,13 @@ const WaveBackground = () => (
       </path>
 
       {/* Wave 9 */}
-      <path fill="url(#wave-gradient-9)" d="M0,930 Q640,800 1280,930 T2560,930 V1080 H0 Z">
-        <animate 
-          attributeName="d" 
-          dur="95s" 
+      <path
+        fill="url(#wave-gradient-9)"
+        d="M0,930 Q640,800 1280,930 T2560,930 V1080 H0 Z"
+      >
+        <animate
+          attributeName="d"
+          dur="95s"
           repeatCount="indefinite"
           values="
             M0,930 Q640,800 1280,930 T2560,930 V1080 H0 Z;
@@ -434,10 +644,13 @@ const WaveBackground = () => (
       </path>
 
       {/* Wave 10 - Bottom layer */}
-      <path fill="url(#wave-gradient-10)" d="M0,980 Q480,850 960,980 T1920,980 V1080 H0 Z">
-        <animate 
-          attributeName="d" 
-          dur="85s" 
+      <path
+        fill="url(#wave-gradient-10)"
+        d="M0,980 Q480,850 960,980 T1920,980 V1080 H0 Z"
+      >
+        <animate
+          attributeName="d"
+          dur="85s"
           repeatCount="indefinite"
           values="
             M0,980 Q480,850 960,980 T1920,980 V1080 H0 Z;
@@ -454,22 +667,22 @@ const WaveBackground = () => (
 function App() {
   const [displayText, setDisplayText] = useState("");
   const fullText = "Computer Science & Engineering Student";
-  const words = fullText.split(' ');
-  
+  const words = fullText.split(" ");
+
   useEffect(() => {
     const charDelay = 150;
     const autocompleteDelay = 100;
-    
+
     let currentWordIndex = 0;
     let currentCharIndex = 0;
     let currentDisplay = "";
-    
+
     const typeNextChar = () => {
       if (currentWordIndex >= words.length) return;
-      
+
       const currentWord = words[currentWordIndex];
       const charsToType = Math.min(3, currentWord.length);
-      
+
       if (currentCharIndex < charsToType) {
         currentDisplay += currentWord[currentCharIndex];
         setDisplayText(currentDisplay);
@@ -481,7 +694,7 @@ function App() {
           currentDisplay += " ";
         }
         setDisplayText(currentDisplay);
-        
+
         currentWordIndex++;
         currentCharIndex = 0;
         setTimeout(typeNextChar, autocompleteDelay);
@@ -493,14 +706,20 @@ function App() {
         setTimeout(typeNextChar, autocompleteDelay);
       }
     };
-    
+
     typeNextChar();
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full text-gray-200 font-sans" style={{ backgroundColor: '#000000' }}>
+    <div
+      className="relative min-h-screen w-full text-gray-200 font-sans"
+      style={{ backgroundColor: "#000000" }}
+    >
       {/* Animated Wave Background */}
-      <div className="fixed top-0 left-0 w-screen h-screen z-0" style={{ width: '100vw', height: '100vh' }}>
+      <div
+        className="fixed top-0 left-0 w-screen h-screen z-0"
+        style={{ width: "100vw", height: "100vh" }}
+      >
         <WaveBackground />
       </div>
 
@@ -509,27 +728,27 @@ function App() {
           overflow-x: hidden;
           scrollbar-gutter: stable;
         }
-        
+
         ::-webkit-scrollbar {
           width: 12px;
         }
-        
+
         ::-webkit-scrollbar-track {
           background: transparent;
         }
-        
+
         ::-webkit-scrollbar-thumb {
           background: rgba(255, 255, 255, 0.2);
           border-radius: 6px;
           border: 2px solid transparent;
           background-clip: padding-box;
         }
-        
+
         ::-webkit-scrollbar-thumb:hover {
           background: rgba(255, 255, 255, 0.4);
           background-clip: padding-box;
         }
-        
+
         * {
           scrollbar-width: thin;
           scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
@@ -539,60 +758,96 @@ function App() {
       {/* Main Content - Single Page Layout */}
       <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-7xl">
-          
           {/* Header Section */}
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-100 mb-2">
               Ojasw Kant
             </h1>
-            <p className="text-lg md:text-xl font-share-tech mb-4" style={{ color: '#f97316' }}>
-              {displayText}<span className="animate-pulse">|</span>
+            <p
+              className="text-lg md:text-xl font-share-tech mb-4"
+              style={{ color: "#f97316" }}
+            >
+              {displayText}
+              <span className="animate-pulse">|</span>
             </p>
             <div className="flex justify-center gap-4 mb-4">
-              <a href="https://github.com/ojaswk27" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">
+              <a
+                href="https://github.com/ojaswk27"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white"
+              >
                 <GitHubIcon />
               </a>
-              <a href="https://www.linkedin.com/in/ojasw-kant-169aa032a" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">
+              <a
+                href="https://www.linkedin.com/in/ojasw-kant-169aa032a"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white"
+              >
                 <LinkedInIcon />
               </a>
-              <a href="mailto:ojaswkant@gmail.com" className="text-gray-400 hover:text-white">
+              <a
+                href="mailto:ojaswkant@gmail.com"
+                className="text-gray-400 hover:text-white"
+              >
                 <MailIcon />
               </a>
             </div>
             <p className="text-sm text-gray-400 max-w-2xl mx-auto">
-              I focus on software and ML systems for autonomous applications, with experience building data pipelines, computer vision models, and embedded hardware integrations.
+              I focus on software and ML systems for autonomous applications,
+              with experience building data pipelines, computer vision models,
+              and embedded hardware integrations.
             </p>
           </div>
 
           {/* Grid Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:items-start" style={{ position: 'relative', zIndex: 2 }}>
-            
+          <div
+            className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:items-start"
+            style={{ position: "relative", zIndex: 2 }}
+          >
             {/* Left Column */}
             <div className="flex flex-col gap-4 lg:h-full">
-              
               {/* Education */}
               <GlassCard className="p-4 flex-shrink-0">
-                <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">Education</h3>
+                <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">
+                  Education
+                </h3>
                 <div className="space-y-4">
                   <div className="space-y-1">
-                    <p className="text-sm font-semibold text-gray-200">B.Tech in Computer Science</p>
-                    <p className="text-xs text-gray-400">Shiv Nadar Institute of Eminence</p>
-                    <p className="text-xs text-gray-400">2024–2028 • Minor in Mathematics</p>
+                    <p className="text-sm font-semibold text-gray-200">
+                      B.Tech in Computer Science
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      Shiv Nadar Institute of Eminence
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      2024–2028 • Minor in Mathematics
+                    </p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-semibold text-gray-200">Senior Secondary (Class XII)</p>
+                    <p className="text-sm font-semibold text-gray-200">
+                      Senior Secondary (Class XII)
+                    </p>
                     <p className="text-xs text-gray-400">Birla Vidya Niketan</p>
-                    <p className="text-xs text-gray-400">PCM + Computer Science</p>
+                    <p className="text-xs text-gray-400">
+                      PCM + Computer Science
+                    </p>
                   </div>
                 </div>
               </GlassCard>
 
               {/* Skills */}
               <GlassCard className="p-4 flex-shrink-0">
-                <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">Skills</h3>
+                <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">
+                  Skills
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {SKILLS.map((skill, index) => (
-                    <span key={index} className="bg-gray-700/30 text-gray-300 text-xs px-2 py-1 rounded">
+                    <span
+                      key={index}
+                      className="bg-gray-700/30 text-gray-300 text-xs px-2 py-1 rounded"
+                    >
                       {skill.name}
                     </span>
                   ))}
@@ -601,11 +856,15 @@ function App() {
 
               {/* Achievements */}
               <GlassCard className="p-4 flex-grow">
-                <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">Achievements</h3>
+                <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">
+                  Achievements
+                </h3>
                 <div className="space-y-3">
                   {ACHIEVEMENTS.map((ach, index) => (
                     <div key={index}>
-                      <p className="text-sm font-semibold text-white">{ach.title}</p>
+                      <p className="text-sm font-semibold text-white">
+                        {ach.title}
+                      </p>
                       <p className="text-xs text-gray-400">{ach.event}</p>
                       <p className="text-xs text-gray-500">{ach.date}</p>
                     </div>
@@ -616,16 +875,19 @@ function App() {
 
             {/* Middle & Right Columns */}
             <div className="flex flex-col gap-4 lg:col-span-2 lg:h-full">
-              
               {/* Experience */}
               <GlassCard className="p-4 flex-shrink-0">
-                <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">Experience</h3>
+                <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">
+                  Experience
+                </h3>
                 <div className="space-y-4">
                   {EXPERIENCE.map((exp, index) => (
                     <div key={index}>
                       <div className="flex justify-between items-start mb-1">
                         <div>
-                          <h4 className="text-sm font-bold text-white">{exp.role}</h4>
+                          <h4 className="text-sm font-bold text-white">
+                            {exp.role}
+                          </h4>
                           <p className="text-xs text-gray-400">{exp.company}</p>
                         </div>
                         <p className="text-xs text-gray-500">{exp.duration}</p>
@@ -641,23 +903,38 @@ function App() {
               </GlassCard>
 
               {/* Projects */}
-              <GlassCard className="p-4 flex-grow" style={{ overflow: 'visible', position: 'relative', zIndex: 10 }}>
-                <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">Projects</h3>
+              <GlassCard
+                className="p-4 flex-grow"
+                style={{
+                  overflow: "visible",
+                  position: "relative",
+                  zIndex: 10,
+                }}
+              >
+                <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">
+                  Projects
+                </h3>
                 <ProjectGrid />
               </GlassCard>
             </div>
           </div>
 
           {/* Interests Section */}
-          <div className="mt-4" style={{ position: 'relative', zIndex: 1 }}>
+          <div className="mt-4" style={{ position: "relative", zIndex: 1 }}>
             <GlassCard className="p-4">
-              <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">Interests</h3>
+              <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">
+                Interests
+              </h3>
               <p className="text-xs text-gray-300 mb-3 italic">
-                Very interested in the junction of software and hardware applications, it is really cool to me.
+                Very interested in the junction of software and hardware
+                applications, it is really cool to me.
               </p>
               <div className="flex flex-wrap gap-2">
                 {INTERESTS.map((interest, index) => (
-                  <span key={index} className="bg-gray-700/30 text-gray-300 text-xs px-2 py-1 rounded">
+                  <span
+                    key={index}
+                    className="bg-gray-700/30 text-gray-300 text-xs px-2 py-1 rounded"
+                  >
                     {interest}
                   </span>
                 ))}

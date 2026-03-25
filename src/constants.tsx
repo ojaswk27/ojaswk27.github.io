@@ -243,9 +243,18 @@ export const PROJECTS: Project[] = [
   },
   {
     title: "Project: Hephaestus",
-    description: "An iterative code performance optimiser with a SvelteKit dashboard and a Go + Python backend. It profiles binaries with Linux perf, uses an LLM to propose and test optimisations one at a time, and loops until the code approaches its theoretical maximum or a hard limit is hit.",
-    tags: ["Go", "Python", "SvelteKit", "Docker", "Linux perf", "Performance Optimization"],
+    description:
+      "An iterative code performance optimiser with a SvelteKit dashboard and a Go + Python backend. It profiles binaries with Linux perf, uses an LLM to propose and test optimisations one at a time, and loops until the code approaches its theoretical maximum or a hard limit is hit.",
+    tags: [
+      "Go",
+      "Python",
+      "SvelteKit",
+      "Docker",
+      "Linux perf",
+      "Performance Optimization",
+    ],
     link: "https://github.com/manan025/dust-hackdata",
+    cliLink: "https://github.com/ojaswk27/Hephaestus-CLI",
     slug: "hephaestus",
     fullDescription: hephaestusMd,
     techDetails: [
@@ -267,8 +276,18 @@ export const PROJECTS: Project[] = [
   },
   {
     title: "Project: PrintGuard",
-    description: "A Raspberry Pi 5 monitor for Bambu Lab FDM printers that uses the Obico YOLOv4-tiny ONNX model and OpenCV heuristics to detect print failures in real time, then automatically pauses or stops the printer via local MQTT.",
-    tags: ["Python", "Computer Vision", "ONNX", "YOLOv4", "OpenCV", "Raspberry Pi", "MQTT", "IoT"],
+    description:
+      "A Raspberry Pi 5 monitor for Bambu Lab FDM printers that uses the Obico YOLOv4-tiny ONNX model and OpenCV heuristics to detect print failures in real time, then automatically pauses or stops the printer via local MQTT.",
+    tags: [
+      "Python",
+      "Computer Vision",
+      "ONNX",
+      "YOLOv4",
+      "OpenCV",
+      "Raspberry Pi",
+      "MQTT",
+      "IoT",
+    ],
     link: "https://github.com/ojaswk27/dust2",
     slug: "printguard",
     fullDescription: printguardMd,
@@ -459,5 +478,5 @@ export const INTERESTS = [
   "Embedded Systems",
   "3D Printing & Fabrication",
   "Drone Technology",
-  "Real-time Systems"
+  "Real-time Systems",
 ];

@@ -1,10 +1,11 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
 export interface Project {
   title: string;
   description: string;
   tags: string[];
   link?: string;
+  cliLink?: string;
   slug?: string;
   fullDescription?: string;
   techDetails?: string[];

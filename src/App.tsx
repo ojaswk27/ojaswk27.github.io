@@ -152,7 +152,8 @@ const ProjectCard: React.FC<{
                   e.stopPropagation();
                   window.open(project.link, "_blank", "noopener,noreferrer");
                 }}
-                className="text-gray-400 hover:text-white cursor-pointer"
+                className="cursor-pointer"
+                style={{ color: "#f97316" }}
                 title="Main Repository"
               >
                 <ExternalLinkIcon />
@@ -164,7 +165,8 @@ const ProjectCard: React.FC<{
                   e.stopPropagation();
                   window.open(project.cliLink, "_blank", "noopener,noreferrer");
                 }}
-                className="text-gray-400 hover:text-white cursor-pointer"
+                className="cursor-pointer"
+                style={{ color: "#f97316" }}
                 title="CLI Version"
               >
                 <ExternalLinkIcon />

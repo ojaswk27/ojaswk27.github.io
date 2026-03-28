@@ -214,15 +214,18 @@ export const PROJECTS: Project[] = [
     link: "https://github.com/rohitjg13/MORNIS",
     slug: "cv-trash-detection",
     fullDescription: cvTrashMd,
-    // TODO: fill in tech details for CV Trash Detection
-    techDetails: [],
+    techDetails: [
+      "Custom-trained image segmentation models for urban waste detection",
+      "Semantic segmentation pipeline with volumetric approximation for trash density estimation",
+      "Real-time inference integrated with dynamic vehicle routing logic",
+    ],
     images: [],
-    // TODO: fill in duration
-    duration: "-",
-    // TODO: fill in your role (CV model, routing logic, etc.)
-    role: "-",
-    // TODO: fill in learnings
-    learnings: [],
+    duration: "Summer 2025",
+    role: "CV Model Training and Inference",
+    learnings: [
+      "Trained and evaluated custom segmentation models on domain-specific datasets, navigating class imbalance and annotation quality tradeoffs",
+      "Developed practical understanding of segmentation architectures and the full training pipeline from data preparation to deployment",
+    ],
   },
   {
     title: "Hackdata 2026 - Multimodal Video RAG",
@@ -231,14 +234,10 @@ export const PROJECTS: Project[] = [
     tags: ["VLM", "RAG", "Video Processing", "Python", "Qwen3"],
     slug: "hackdata-2026-video-rag",
     fullDescription: videoRagMd,
-    // TODO: fill in tech details for Hackdata Video RAG
     techDetails: [],
     images: [],
-    // TODO: fill in duration
-    duration: "-",
-    // TODO: fill in your specific role (e.g. pipeline, embeddings, etc.)
-    role: "-",
-    // TODO: fill in learnings
+    duration: "March 2026 - Present",
+    role: "WIP",
     learnings: [],
   },
   {

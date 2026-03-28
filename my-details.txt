@@ -1,0 +1,147 @@
+OJASW KANT - PORTFOLIO DETAILS
+===============================
+
+--- PERSONAL INFO ---
+Name: Ojasw Kant
+Email: ojaswkant@gmail.com
+GitHub: https://github.com/ojaswk27
+LinkedIn: https://www.linkedin.com/in/ojasw-kant-169aa032a
+Bio: Focuses on software and ML systems for autonomous applications, with experience building data pipelines, computer vision models, and embedded hardware integrations.
+
+
+--- EDUCATION ---
+B.Tech in Computer Science
+  Shiv Nadar Institute of Eminence (SNIoE)
+  2024–2028 | Minor in Mathematics
+
+Senior Secondary (Class XII)
+  Birla Vidya Niketan
+  Subjects: PCM + Computer Science
+
+
+--- SKILLS ---
+Programming Languages: Python, C/C++, Rust, Java, JavaScript/TypeScript
+Frameworks/Libraries: React
+Domains: Machine Learning, Computer Vision, DSA
+Engineering: CAD, FEM, CFD, 3D Printing
+
+
+--- INTERESTS ---
+Autonomous Systems, Aerospace Engineering, Computer Vision, Hardware-Software Integration,
+Robotics, Machine Learning, Embedded Systems, 3D Printing & Fabrication, Drone Technology,
+Real-time Systems
+
+
+--- EXPERIENCE ---
+
+1. Assistant Secretary
+   Aeronautics and Aerospace Society, SNIoE
+   Summer 2025 - Present
+   - Lead aerospace-focused technical projects and research initiatives within the society
+   - Organise workshops and seminars on aerospace engineering topics for student members
+   - Coordinate between students, faculty, and industry professionals for project guidance
+   - Manage team operations and logistics for inter-collegiate aerospace competitions
+
+2. Active Member
+   American Society of Mechanical Engineers (ASME), SNIoE
+   Fall 2024 - Present
+   - Secured 3rd place at the ASME India IAM3D national challenge
+   - Applied additive manufacturing techniques and mechanical design principles to competition deliverables
+   - Contributed to design optimisation workflows using FEM analysis and CAD modelling
+   - Engaged in technical discourse on advanced manufacturing methodologies
+
+3. Member
+   Atal Tinkering Lab, Birla Vidya Niketan
+   2023
+   - Participated in hands-on prototyping and robotics development projects
+   - Conducted electronics assembly and embedded systems integration
+   - Applied structured problem-solving approaches to engineering innovation challenges
+   - Built foundational competencies in hardware-software co-design
+
+
+--- ACHIEVEMENTS ---
+- 3rd Place - IAM3D Challenge | ASME India National Competition | April 2025
+- Dean's List - Academic Excellence | Shiv Nadar Institute of Eminence | Summer 2024
+- SIH Qualifier | Smart India Hackathon - Smart S.N.U. Hackathon | 2025
+- NIDAR 2025 Participant | Autonomous Drone Competition | 2025
+- 3rd Place - Hackdata 2026 | Hackdata Hackathon (organised by SNU, funded by HP) | March 14-15, 2026
+
+
+--- PROJECTS ---
+
+1. AI-Powered Aerospace Design Assistant
+   Tags: Python, RAG, LLM, Aerospace, ML
+   Duration: Monsoon 2025
+   Role: Sole developer - end-to-end implementation including LangGraph architecture, RAG pipeline, LLM integration, calculation tools, and validation layers
+   GitHub: https://github.com/ojaswk27
+   Description: AI assistant that translates natural language requirements into preliminary aerospace vehicle designs with computed specifications and source citations. Implements retrieval-augmented generation over 30+ arXiv and NASA papers using a vehicle-type vector index, with LLM-based auto-fill and validation to enforce realistic design constraints.
+   Tech Details:
+   - LangGraph-based multi-node pipeline: LLM Supervisor -> Requirement Parser -> Parameter Completer -> RAG Search -> Formula Extractor -> Data Validator -> Calculation Agent -> Validator -> Synthesizer
+   - RAG over 30+ arXiv and NASA papers using ChromaDB with sentence-transformers/all-MiniLM-L6-v2 embeddings, filtered by vehicle type for precision retrieval
+   - LLM-powered parameter completion fills unspecified inputs (speed, altitude, range) using vehicle-class reasoning
+   - LLM data validation layer detects and corrects scale mismatches between retrieved research data and the actual design target
+   - Context-aware sub-classification for fixed-wing vehicles (uav_small through transport)
+   - Modular physics-based calculation tools per vehicle type using real aerospace formulas with unit-aware conversions
+   Learnings:
+   - Built a full RAG pipeline from scratch - chunking and embedding research papers, setting up ChromaDB, and tuning retrieval
+   - Learnt LangChain and LangGraph for orchestrating multi-step LLM workflows
+   - Used LangSmith for tracing and debugging LLM calls across the pipeline
+
+2. NIDAR 2025 - Autonomous Multi-Drone SAR System
+   Tags: Computer Vision, Autonomous Systems, Python, CAD, Drones
+   Duration: June 2025 - January 2026
+   Role: Multirole - CV/AI (model training, inference optimisation, edge deployment), structural design and analysis (CAD, FEM, fabrication), and autonomy design (systems architecture, inter-drone communication)
+   Description: Fully autonomous multi-drone search and rescue system for disaster management scenarios. Responsibilities included CV model training, inference optimisation and deployment pipelines, autonomy architecture design, CAD analysis, and physical fabrication and assembly.
+   Tech Details:
+   - Deployed and optimised CV inference on the Jetson Orin Nano using ONNX runtime with TensorRT execution provider and FP16 precision
+   - Trained and benchmarked five YOLO variants (YOLOv8n, YOLOv8s, YOLOv8m, YOLOv9c, YOLOv9e) on a custom SAR dataset
+   - Built a custom multi-object tracker inspired by ByteTrack
+   - Training dataset compiled from HERIDAL and several domain-specific datasets
+   Learnings:
+   - Hands-on experience optimising CV inference for Jetson Orin Nano including TensorRT export and precision tuning
+   - Trained and fine-tuned a CV model on a custom-compiled SAR dataset
+   - Built a custom multi-object tracking solution from scratch
+   - Designed autonomous systems architecture and inter-drone communication using SiK radios
+
+3. Smart S.N.U. Hackathon - CV Trash Detection
+   Tags: Computer Vision, Semantic Segmentation, Python, ML
+   GitHub: https://github.com/rohitjg13/MORNIS
+   Description: Computer vision system for urban waste detection that dynamically routes garbage collection vehicles based on estimated trash volume and real-time truck location. Employs semantic segmentation with a custom volumetric approximation method. Qualified for Smart India Hackathon (SIH).
+
+4. Hackdata 2026 - Multimodal Video RAG
+   Tags: VLM, RAG, Video Processing, Python, Qwen3
+   Description: Multimodal retrieval-augmented generation system for video understanding, utilising Qwen3-VL for video-grounded reasoning over time-chunked clips and frames. Media pipeline segments content into 30-60s chunks, generates multimodal embeddings, and indexes them in Chroma/Qdrant, targeting 60-120 fps throughput.
+
+5. Project: Hephaestus
+   Tags: Go, Python, SvelteKit, Docker, Linux perf, Performance Optimization
+   Duration: March 14-15, 2026
+   Role: LLM integration - built the LLM-powered optimisation suggestion layer and related infrastructure for interpreting perf output and generating code changes
+   GitHub: https://github.com/manan025/dust-hackdata
+   Description: Iterative code performance optimiser with a SvelteKit dashboard and a Go + Python backend. Profiles binaries with Linux perf, uses an LLM to propose and test optimisations one at a time, and loops until the code approaches its theoretical maximum or a hard limit is hit.
+   Tech Details:
+   - Go HTTP server exposes the profiling pipeline API and GitHub webhook integration with JWT auth
+   - Linux perf collects hardware-level counters (CPU cycles, cache misses, branch mispredictions, IPC) inside Docker containers
+   - LLM proposes exactly one optimisation per iteration; system compiles, re-profiles, and keeps or rolls back based on a weighted score (70% runtime, 20% IPC, 10% cache miss rate)
+   - Supports cross-architecture profiling targets: x86_64, arm64, wasm32, and riscv64
+   - Stops when code reaches within 5% of CPU's theoretical peak, or after three consecutive failed attempts
+   - SvelteKit (Svelte 5) frontend with Supabase for persistence
+   Learnings:
+   - Managing and orchestrating multiple Docker containers simultaneously
+   - Interpreting Linux perf hardware counters and translating them into optimisation strategies
+   - Designed LLM prompts that reason over perf metrics and propose concrete code changes
+
+6. Project: PrintGuard
+   Tags: Python, Computer Vision, ONNX, YOLOv4, OpenCV, Raspberry Pi, MQTT, IoT
+   Duration: March 14-15, 2026
+   Role: CV & Edge Computing - implemented the computer vision detection pipeline, OpenCV heuristics, and deployment on Raspberry Pi 5
+   GitHub: https://github.com/ojaswk27/dust2
+   Description: Raspberry Pi 5 monitor for Bambu Lab FDM printers that uses the Obico YOLOv4-tiny ONNX model and OpenCV heuristics to detect print failures in real time, then automatically pauses or stops the printer via local MQTT.
+   Tech Details:
+   - Runs Obico YOLOv4-tiny ONNX model for spaghetti and detachment detection, combined with OpenCV heuristics for layer shift (Sobel), bed adhesion loss (variance), and extrusion issues (brightness)
+   - Captures frames from Raspberry Pi Camera Module 3 or USB webcam at configurable FPS
+   - Communicates with Bambu Lab printers over local MQTT (port 8883, TLS) using OpenBambuAPI protocol
+   - Configurable via YAML with gitignored local override file; supports dry-run mode and single-image CLI testing
+   - Supports fine-tuning custom ONNX weights on custom labelled failure frames
+   Learnings:
+   - Reverse engineered the Bambu Lab camera stream protocol
+   - Learnt how to run ONNX models efficiently on edge hardware and combine with OpenCV heuristics

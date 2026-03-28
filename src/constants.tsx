@@ -241,7 +241,7 @@ export const PROJECTS: Project[] = [
     learnings: [],
   },
   {
-    title: "Project: Hephaestus",
+    title: "Hackdata 26 Project: Hephaestus",
     description:
       "An iterative code performance optimiser with a SvelteKit dashboard and a Go + Python backend. It profiles binaries with Linux perf, uses an LLM to propose and test optimisations one at a time, and loops until the code approaches its theoretical maximum or a hard limit is hit.",
     tags: [
